@@ -129,7 +129,44 @@
 
             // Clear canvas
             gl.clear(gl.COLOR_BUFFER_BIT);
-    
+
+            document.onkeydown = function (ev) {
+                var step = new Number(document.getElementById("step").value);
+                switch (ev.keyCode) {
+                    case 37: // Left
+                        // ...
+                        break;
+                    case 39: // Right
+                        // ...
+                        break;
+                    case 38: // Up
+                        // ...
+                        break;
+                    case 40: // Down
+                        // ...
+                        break;
+                    case 33: // PageUp
+                        // ...
+                        break;
+                    case 34: // PageDown
+                        // ...
+                        break;
+                    case 36: // Home
+                        // ...
+                        break
+                    case 35: // End
+                        // ...
+                        break;
+                    case 187: // +
+                        // ...
+                        break;
+                    case 189: // -
+                        // ...
+                        break;
+                }
+                    // ...
+            }
+            
             // Draw
             gl.drawArrays(gl.TRIANGLES, 0, n);
 
@@ -247,6 +284,7 @@
             // Vertices
             var dim = 3;
             var vertices = new Float32Array([
+<<<<<<< HEAD
 
                 0.08, -0.2, 0,  // Base 1
                 -0.08, -0.2, 0, 
@@ -254,6 +292,14 @@
                 0.08, -0.2, 0, // Base 2
                 0.08, -0.8, 0,
                 -0.08, -0.8, 0,
+=======
+                -0.1, -0.1, 0,  // Base 1
+                -0.1, -0.8, 0, 
+                0.1, -0.8, 0, 
+                -0.1, -0.1, 0, // Base 2
+                0.1, -0.1, 0,
+                0.1, -0.8, 0, 
+>>>>>>> 7862d4d (keys)
                 0, 0.1, 0, // 1era capa
                 -0.40, -0.46, 0,
                 0.40, -0.46, 0,
