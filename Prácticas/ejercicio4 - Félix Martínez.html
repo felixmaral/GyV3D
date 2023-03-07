@@ -46,6 +46,7 @@
     <script>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         // Inicializar variables generales
 
         var gl;
@@ -57,10 +58,22 @@
 
         
 =======
+=======
+        // Inicializar variables generales
+
+>>>>>>> cf87494 (P4)
         var gl;
-        var cuentaTx = 0.0;
+        var cuentaTx = 0.0; 
         var cuentaTy = 0.0;
+<<<<<<< HEAD
 >>>>>>> 48ad61c (p2)
+=======
+        var cuentaE = 1.0;
+        var cuentaR = 0.0;
+        var cuentaN = 0.0;
+
+        
+>>>>>>> cf87494 (P4)
 
         function init() {
 
@@ -149,7 +162,12 @@
 
             document.onkeydown = function (ev) {
                 var step = new Number(document.getElementById("step").value);
+
+                console.log(ev.keyCode)
+
                 switch (ev.keyCode) {
+
+                    
                     case 37: // Left
                         cuentaTx -= step
                         break;
@@ -166,19 +184,19 @@
                         cuentaE += step
                         break;
                     case 34: // PageDown
-                        cuentaE += step
+                        cuentaE -= step
                         break;
                     case 36: // Home
-                        
+                        cuentaR -= step
                         break
                     case 35: // End
-                        
+                        cuentaR += step
                         break;
                     case 187: // +
-                        
+                        cuentaN += step
                         break;
                     case 189: // -
-                        
+                        cuentaN -= step
                         break;
                 }
                     // ...
@@ -227,6 +245,7 @@
             };
 =======
 
+
             drawScene();
 >>>>>>> 48ad61c (p2)
 
@@ -252,13 +271,20 @@
             gl.clear(gl.COLOR_BUFFER_BIT);
 
             // Calculate position
-            var positionX = Math.sin(cuentaTx);
-            var positionY = Math.sin(cuentaTy);
-            var scale = Math.abs(Math.sin(countE));
 
+<<<<<<< HEAD
             var Txy = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [positionX, positionY, 0.0]);
             var E = glMatrix.mat4.fromScaling(glMatrix.mat4.create(), [scale, scale, 0.0]);
 >>>>>>> 48ad61c (p2)
+=======
+                var Txy = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaTx, cuentaTy, 0.0]);
+                var Sxy = glMatrix.mat4.fromScaling(glMatrix.mat4.create(), [cuentaE, cuentaE, 0.0]);
+                var Rz = glMatrix.mat4.fromZRotation(glMatrix.mat4.create(), cuentaR);
+
+                var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
+                var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
+                var matrix = TSRxyz;
+>>>>>>> cf87494 (P4)
 
 
             // Set uniform value (u_Matrix) in vertex shader
@@ -266,11 +292,18 @@
             var mvXMatrixUniform = gl.getUniformLocation(gl.program, "u_Matrix");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> cf87494 (P4)
                 gl.uniformMatrix4fv(mvXMatrixUniform, false, matrix);
 
             gl.drawArrays(gl.TRIANGLES, 0, 3*2);
 
+<<<<<<< HEAD
                 var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
+=======
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
+>>>>>>> cf87494 (P4)
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
@@ -280,7 +313,11 @@
 
             gl.drawArrays(gl.TRIANGLES, 6, 3);
 
+<<<<<<< HEAD
                 var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
+=======
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
+>>>>>>> cf87494 (P4)
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
@@ -291,7 +328,11 @@
             gl.drawArrays(gl.TRIANGLES, 9, 3);
 
                 
+<<<<<<< HEAD
                 var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
+=======
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
+>>>>>>> cf87494 (P4)
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
@@ -301,7 +342,11 @@
 
             gl.drawArrays(gl.TRIANGLES, 12, 3);
 
+<<<<<<< HEAD
                 var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
+=======
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
+>>>>>>> cf87494 (P4)
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
@@ -310,6 +355,7 @@
                 gl.uniformMatrix4fv(mvXMatrixUniform, false, matrix);
 
             gl.drawArrays(gl.TRIANGLES, 15, 3);
+<<<<<<< HEAD
 
             requestAnimationFrame(drawScene);
 
@@ -317,6 +363,8 @@
 =======
             gl.uniformMatrix4fv(mvXMatrixUniform, false, Txy);
             gl.drawArrays(gl.TRIANGLES, 0, 3*6);
+=======
+>>>>>>> cf87494 (P4)
 
             requestAnimationFrame(drawScene);
 
