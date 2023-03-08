@@ -6,18 +6,26 @@
     </head>
     
     <body onload="init()">
-        <canvas id="myCanvas" width="640" height="480"></canvas>
+        <canvas id="myCanvas" width="800" height="800"></canvas>
         <br>
         Step: <input type="text" value="0.01" id="step">
     </body>
 
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js"> // Cargando libreria glMatrix </script> 
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js"></script>
+
     
     <script id="shaderVs" type="x-shader/x-vertex">
         attribute vec4 a_Position;
         uniform mat4 u_Matrix;
         void main() {
+
             gl_Position = a_Position; 
+
+            gl_Position = u_Matrix * a_Position;
+
         }
     </script>
     
@@ -28,12 +36,25 @@
     </script>
     
     <script>
+
+        // Inicializar variables generales
+
+        var gl;
+        var cuentaTx = 0.0; 
+        var cuentaTy = 0.0;
+        var cuentaE = 1.0;
+        var cuentaR = 0.0;
+        var cuentaN = 0.0;
+
+        
+
         function init() {
+
             // Get canvas object from the DOM
             var canvas = document.getElementById("myCanvas");
     
             // Init WebGL context
-            var gl = canvas.getContext("webgl");
+            gl = canvas.getContext("webgl");
             if (!gl) {
                 console.log("Failed to get the rendering context for WebGL");
                 return;
@@ -56,6 +77,57 @@
     
             // Clear canvas
             gl.clearColor(0.0, 0.0, 0.0, 1.0);
+
+            document.onkeydown = function (ev) {
+                var step = new Number(document.getElementById("step").value);
+
+                console.log(ev.keyCode)
+
+                switch (ev.keyCode) {
+
+                    
+                    case 37: // Left
+                        cuentaTx -= step
+                        break;
+                    case 39: // Right
+                        cuentaTx += step
+                        break;
+                    case 38: // Up
+                        cuentaTy += step
+                        break;
+                    case 40: // Down
+                        cuentaTy -= step
+                        break;
+                    case 33: // PageUp
+                        cuentaE += step
+                        break;
+                    case 34: // PageDown
+                        cuentaE -= step
+                        break;
+                    case 36: // Home
+                        cuentaR -= step
+                        break
+                    case 35: // End
+                        cuentaR += step
+                        break;
+                    case 187: // +
+                        cuentaN += step
+                        break;
+                    case 189: // -
+                        cuentaN -= step
+                        break;
+                }
+                    // ...
+            }
+
+
+            drawScene();
+
+        }
+
+        function drawScene() {
+
+            // Clear canvas
             gl.clear(gl.COLOR_BUFFER_BIT);
     
             // Draw
@@ -105,18 +177,91 @@
 
             
 
+
+            // Calculate position
+
+                var Txy = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaTx, cuentaTy, 0.0]);
+                var Sxy = glMatrix.mat4.fromScaling(glMatrix.mat4.create(), [cuentaE, cuentaE, 0.0]);
+                var Rz = glMatrix.mat4.fromZRotation(glMatrix.mat4.create(), cuentaR);
+
+                var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
+                var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
+                var matrix = TSRxyz;
+
+
+            // Set uniform value (u_Matrix) in vertex shader
+
+            var mvXMatrixUniform = gl.getUniformLocation(gl.program, "u_Matrix");
+
+                gl.uniformMatrix4fv(mvXMatrixUniform, false, matrix);
+
+            gl.drawArrays(gl.TRIANGLES, 0, 3*2);
+
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
+                var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
+                var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
+                var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
+                var matrix = TTSRxyz;
+                
+                gl.uniformMatrix4fv(mvXMatrixUniform, false, matrix);
+
+            gl.drawArrays(gl.TRIANGLES, 6, 3);
+
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
+                var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
+                var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
+                var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
+                var matrix = TTSRxyz;
+
+                gl.uniformMatrix4fv(mvXMatrixUniform, false, matrix);
+
+            gl.drawArrays(gl.TRIANGLES, 9, 3);
+
+                
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
+                var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
+                var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
+                var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
+                var matrix = TTSRxyz;
+
+                gl.uniformMatrix4fv(mvXMatrixUniform, false, matrix);
+
+            gl.drawArrays(gl.TRIANGLES, 12, 3);
+
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
+                var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
+                var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
+                var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
+                var matrix = TTSRxyz;
+
+                gl.uniformMatrix4fv(mvXMatrixUniform, false, matrix);
+
+            gl.drawArrays(gl.TRIANGLES, 15, 3);
+
+            requestAnimationFrame(drawScene);
+
+
         }
     
         function initVertexBuffers(gl) {
             // Vertices
             var dim = 3;
             var vertices = new Float32Array([
+
                 0.08, -0.2, 0,  // Base 1
                 -0.08, -0.2, 0, 
                 -0.08, -0.8, 0,
                 0.08, -0.2, 0, // Base 2
                 0.08, -0.8, 0,
                 -0.08, -0.8, 0,
+
+                -0.1, -0.1, 0,  // Base 1
+                -0.1, -0.8, 0, 
+                0.1, -0.8, 0, 
+                -0.1, -0.1, 0, // Base 2
+                0.1, -0.1, 0,
+                0.1, -0.8, 0, 
+
                 0, 0.1, 0, // 1era capa
                 -0.40, -0.46, 0,
                 0.40, -0.46, 0,
@@ -128,7 +273,7 @@
                 0.26, 0.06, 0,
                 0, 0.46, 0, // 4a capa
                 -0.19, 0.25, 0,
-                0.19, 0.25, 0
+                0.19, 0.25, 0,
             ]);
     
             // Create a buffer object
