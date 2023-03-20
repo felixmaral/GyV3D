@@ -2,7 +2,8 @@
 <html>
 
 <head>
-    <title>WebGL projections: orthographic</title>
+
+    <title>Práctica 5</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js"></script>
 
@@ -30,6 +31,7 @@
         
         var gl;
         var count = 0.0;
+        var checkbox = document.getElementById("miElementoCheckbox");
 
         function init() {
             // Get canvas object from the DOM
@@ -68,12 +70,16 @@
             gl.clear(gl.COLOR_BUFFER_BIT);
 
             // Rotate
-            var mvMatrix = glMatrix.mat4.fromRotation(glMatrix.mat4.create(), count, [0, 0.2, 0]);
+            var mvMatrix = glMatrix.mat4.fromRotation(glMatrix.mat4.create(), count, [0, 0.5, 0]);
             var uMvMatrix = gl.getUniformLocation(gl.program, "u_mvMatrix");
             gl.uniformMatrix4fv(uMvMatrix, false, mvMatrix);
 
             // Draw
-            gl.drawElements(gl.TRIANGLES, 29 * 3 , gl.UNSIGNED_SHORT, 0);
+            if (checkbox) {
+                gl.drawElements(gl.TRIANGLES, 30 * 3 , gl.UNSIGNED_SHORT, 0);
+            } else {
+                gl.drawElements(gl.LINES, 30 * 3 ,  0);
+            }
 
             // Call drawScene again in the next browser repaint
             count += 0.01;
@@ -84,35 +90,35 @@
             // Vertexes and colors  (X, Y, Z, R, G, B)
             var vertexesAndColors = [
                	// Cubo
-                -0.3, -0.6, -0.3,   0.5, 0.01, 0, // v0 
-                0.3, -0.6, -0.3,    0.5, 0.01, 0, // v1 
-                0.3, 0, -0.3,       0.5, 0.01, 0, // v2 
-                -0.3, 0, -0.3,      0.5, 0.01, 0, // v3
+                -0.3, -0.6, -0.3,   0.502, 0.251, 0, // v0 
+                0.3, -0.6, -0.3,    0.502, 0.251, 0, // v1 
+                0.3, 0.1, -0.3,       0.502, 0.251, 0, // v2 
+                -0.3, 0.1, -0.3,      0.502, 0.251, 0, // v3
 
-                -0.3, -0.6, 0.3,    0.5, 0.01, 0, // v4 
-                0.3, -0.6, 0.3,     0.5, 0.01, 0, // v5 
-                0.3, 0, 0.3,        0.5, 0.01, 0, // v6 
-                -0.3, 0, 0.3,       0.5, 0.01, 0, // v7 
+                -0.3, -0.6, 0.3,    0.502, 0.251, 0, // v4 
+                0.3, -0.6, 0.3,     0.502, 0.251, 0, // v5 
+                0.3, 0.1, 0.3,        0.502, 0.251, 0, // v6 
+                -0.3, 0.1, 0.3,       0.502, 0.251, 0, // v7 
 
-                -0.3, -0.6, -0.3,   0.5, 0.01, 0, // v8 
-                -0.3, 0, -0.3,      0.5, 0.01, 0, // v9 
-                -0.3, 0, 0.3,       0.5, 0.01, 0, // v10 
-                -0.3, -0.6, 0.3,    0.5, 0.01, 0, // v11
+                -0.3, -0.6, -0.3,   0.502, 0.251, 0, // v8 
+                -0.3, 0.1, -0.3,      0.502, 0.251, 0, // v9 
+                -0.3, 0.1, 0.3,       0.502, 0.251, 0, // v10 
+                -0.3, -0.6, 0.3,    0.502, 0.251, 0, // v11
 
-                0.3, -0.6, -0.3,    0.5, 0.01, 0, // v12 
-                0.3, 0, -0.3,       0.5, 0.01, 0, // v13 
-                0.3, 0, 0.3,        0.5, 0.01, 0, // v14 
-                0.3, -0.6, 0.3,     0.5, 0.01, 0, // v15
+                0.3, -0.6, -0.3,    0.502, 0.251, 0, // v12 
+                0.3, 0.1, -0.3,       0.502, 0.251, 0, // v13 
+                0.3, 0.1, 0.3,        0.502, 0.251, 0, // v14 
+                0.3, -0.6, 0.3,     0.502, 0.251, 0, // v15
 
-                -0.3, -0.6, -0.3,   0.5, 0.01, 0, // v16
-                -0.3, -0.6, 0.3,    0.5, 0.01, 0, // v17 
-                0.3, -0.6, 0.3,     0.5, 0.01, 0, // v18 
-                0.3, -0.6, -0.3,    0.5, 0.01, 0, // v19 
+                -0.3, -0.6, -0.3,   0.502, 0.251, 0, // v16
+                -0.3, -0.6, 0.3,    0.502, 0.251, 0, // v17 
+                0.3, -0.6, 0.3,     0.502, 0.251, 0, // v18 
+                0.3, -0.6, -0.3,    0.502, 0.251, 0, // v19 
 				
-                -0.3, 0, -0.3,    0.5, 0.01, 0, // v20
-                -0.3, 0, 0.3,     0.5, 0.01, 0, // v21 
-                0.3, 0, 0.3,      0.5, 0.01, 0, // v22 
-                0.3, 0, -0.3,     0.5, 0.01, 0, // v23 
+                -0.3, 0.1, -0.3,    0.502, 0.251, 0, // v20
+                -0.3, 0.1, 0.3,     0.502, 0.251, 0, // v21 
+                0.3, 0.1, 0.3,      0.502, 0.251, 0, // v22 
+                0.3, 0.1, -0.3,     0.502, 0.251, 0, // v23 
 
                 // Piramides
 
@@ -316,7 +322,7 @@
 <body onload="init()">
     <canvas id="myCanvas" width="640" height="480"></canvas><br>
     <b>Rotation</b>
-    <input type="checkbox" name="rotation" checked>
+    <input type="checkbox" id="miElementoCheckbox" name="rotation" checked>
     <input type="range" id="speed" min="1" max="3" value="1" step="1"> Speed<br>
     <b>WebGL primitive</b>
     <input type="radio" name="primitive" value="triangles" checked> Triangles
