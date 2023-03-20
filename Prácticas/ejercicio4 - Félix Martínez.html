@@ -1,6 +1,7 @@
 
 <html>
 
+
     <head>
         <title>Draw a triangle</title>
     </head>
@@ -11,21 +12,29 @@
         Step: <input type="text" value="0.01" id="step">
     </body>
 
+<<<<<<< HEAD
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js"> // Cargando libreria glMatrix </script> 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js"></script>
 
+=======
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js"></script>
+>>>>>>> 48ad61c (p2)
     
     <script id="shaderVs" type="x-shader/x-vertex">
         attribute vec4 a_Position;
         uniform mat4 u_Matrix;
         void main() {
+<<<<<<< HEAD
 
             gl_Position = a_Position; 
 
             gl_Position = u_Matrix * a_Position;
 
+=======
+            gl_Position = u_Matrix * a_Position;
+>>>>>>> 48ad61c (p2)
         }
     </script>
     
@@ -37,6 +46,8 @@
     
     <script>
 
+<<<<<<< HEAD
+<<<<<<< HEAD
         // Inicializar variables generales
 
         var gl;
@@ -46,6 +57,28 @@
         var cuentaR = 0.0;
         var cuentaN = 0.0;
 
+<<<<<<< HEAD
+=======
+        
+=======
+=======
+        // Inicializar variables generales
+
+>>>>>>> cf87494 (P4)
+        var gl;
+        var cuentaTx = 0.0; 
+        var cuentaTy = 0.0;
+<<<<<<< HEAD
+>>>>>>> 48ad61c (p2)
+=======
+        var cuentaE = 1.0;
+        var cuentaR = 0.0;
+        var cuentaN = 0.0;
+
+        
+>>>>>>> cf87494 (P4)
+
+>>>>>>> e3a172f4602c7088636afe42f9065fbfb6dcd842
         function init() {
 
             // Get canvas object from the DOM
@@ -75,6 +108,7 @@
     
             // Clear canvas
             gl.clearColor(0.0, 0.0, 0.0, 1.0);
+<<<<<<< HEAD
 
             document.onkeydown = function (ev) {
                 var step = new Number(document.getElementById("step").value);
@@ -126,6 +160,108 @@
         function drawScene() {
 
             gl.clear(gl.COLOR_BUFFER_BIT);
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 48ad61c (p2)
+
+            document.onkeydown = function (ev) {
+                var step = new Number(document.getElementById("step").value);
+
+                console.log(ev.keyCode)
+
+                switch (ev.keyCode) {
+
+                    
+                    case 37: // Left
+                        cuentaTx -= step
+                        break;
+                    case 39: // Right
+                        cuentaTx += step
+                        break;
+                    case 38: // Up
+                        cuentaTy += step
+                        break;
+                    case 40: // Down
+                        cuentaTy -= step
+                        break;
+                    case 33: // PageUp
+                        cuentaE += step
+                        break;
+                    case 34: // PageDown
+                        cuentaE -= step
+                        break;
+                    case 36: // Home
+                        cuentaR -= step
+                        break
+                    case 35: // End
+                        cuentaR += step
+                        break;
+                    case 187: // +
+                        cuentaN += step
+                        break;
+                    case 189: // -
+                        cuentaN -= step
+                        break;
+                }
+                    // ...
+            }
+<<<<<<< HEAD
+            
+            // Draw
+            gl.drawArrays(gl.TRIANGLES, 0, n);
+
+            // Captura de teclado
+            document.onkeydown = function (ev) {
+            var step = new Number(document.getElementById("step").value);
+            switch (ev.keyCode) {
+                case 37: // Left
+                    // ...
+                    break;
+                case 39: // Right
+                    // ...
+                    break;
+                case 38: // Up
+                    // ...
+                    break;
+                case 40: // Down
+                    // ...
+                    break;
+                case 33: // PageUp
+                    // ...
+                    break;
+                case 34: // PageDown
+                    // ...
+                    break;
+                case 36: // Home
+                    // ...
+                    break
+                case 35: // End
+                    // ...
+                    break;
+                case 187: // +
+                    // ...
+                    break;
+                case 189: // -
+                    // ...
+                    break;
+                }
+                    // ...
+            };
+=======
+
+
+            drawScene();
+>>>>>>> 48ad61c (p2)
+
+        }
+
+        function drawScene() {
+
+<<<<<<< HEAD
+            
+
+>>>>>>> e3a172f4602c7088636afe42f9065fbfb6dcd842
 
             // Calculate position
 
@@ -136,17 +272,48 @@
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var matrix = TSRxyz;
+=======
+            // Clear canvas
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            // Calculate position
+
+<<<<<<< HEAD
+            var Txy = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [positionX, positionY, 0.0]);
+            var E = glMatrix.mat4.fromScaling(glMatrix.mat4.create(), [scale, scale, 0.0]);
+>>>>>>> 48ad61c (p2)
+=======
+                var Txy = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaTx, cuentaTy, 0.0]);
+                var Sxy = glMatrix.mat4.fromScaling(glMatrix.mat4.create(), [cuentaE, cuentaE, 0.0]);
+                var Rz = glMatrix.mat4.fromZRotation(glMatrix.mat4.create(), cuentaR);
+
+                var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
+                var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
+                var matrix = TSRxyz;
+>>>>>>> cf87494 (P4)
 
 
             // Set uniform value (u_Matrix) in vertex shader
 
             var mvXMatrixUniform = gl.getUniformLocation(gl.program, "u_Matrix");
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> cf87494 (P4)
                 gl.uniformMatrix4fv(mvXMatrixUniform, false, matrix);
 
             gl.drawArrays(gl.TRIANGLES, 0, 3*2);
 
+<<<<<<< HEAD
+<<<<<<< HEAD
                 var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
+=======
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
+>>>>>>> cf87494 (P4)
+=======
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
+>>>>>>> ddfbec0 (practica 4 terminada)
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
@@ -156,7 +323,15 @@
 
             gl.drawArrays(gl.TRIANGLES, 6, 3);
 
+<<<<<<< HEAD
+<<<<<<< HEAD
                 var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
+=======
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
+>>>>>>> cf87494 (P4)
+=======
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
+>>>>>>> ddfbec0 (practica 4 terminada)
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
@@ -167,7 +342,15 @@
             gl.drawArrays(gl.TRIANGLES, 9, 3);
 
                 
+<<<<<<< HEAD
+<<<<<<< HEAD
                 var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
+=======
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
+>>>>>>> cf87494 (P4)
+=======
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
+>>>>>>> ddfbec0 (practica 4 terminada)
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
@@ -177,7 +360,15 @@
 
             gl.drawArrays(gl.TRIANGLES, 12, 3);
 
+<<<<<<< HEAD
+<<<<<<< HEAD
                 var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
+=======
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
+>>>>>>> cf87494 (P4)
+=======
+                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
+>>>>>>> ddfbec0 (practica 4 terminada)
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
@@ -186,9 +377,23 @@
                 gl.uniformMatrix4fv(mvXMatrixUniform, false, matrix);
 
             gl.drawArrays(gl.TRIANGLES, 15, 3);
+<<<<<<< HEAD
 
             requestAnimationFrame(drawScene);
 
+<<<<<<< HEAD
+=======
+
+=======
+            gl.uniformMatrix4fv(mvXMatrixUniform, false, Txy);
+            gl.drawArrays(gl.TRIANGLES, 0, 3*6);
+=======
+>>>>>>> cf87494 (P4)
+
+            requestAnimationFrame(drawScene);
+
+>>>>>>> 48ad61c (p2)
+>>>>>>> e3a172f4602c7088636afe42f9065fbfb6dcd842
         }
     
         function initVertexBuffers(gl) {
@@ -196,6 +401,7 @@
             // Vertices
             var dim = 3;
             var vertices = new Float32Array([
+<<<<<<< HEAD
 
                 0.08, -0.2, 0,  // Base 1
                 -0.08, -0.2, 0, 
@@ -203,6 +409,14 @@
                 0.08, -0.2, 0, // Base 2
                 0.08, -0.8, 0,
                 -0.08, -0.8, 0,
+=======
+                -0.1, -0.1, 0,  // Base 1
+                -0.1, -0.8, 0, 
+                0.1, -0.8, 0, 
+                -0.1, -0.1, 0, // Base 2
+                0.1, -0.1, 0,
+                0.1, -0.8, 0, 
+>>>>>>> 7862d4d (keys)
                 0, 0.1, 0, // 1era capa
                 -0.40, -0.46, 0,
                 0.40, -0.46, 0,
