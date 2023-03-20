@@ -166,7 +166,7 @@
 
             // Write u_vMatrix
             var vMatrixUniform = gl.getUniformLocation(gl.program, "u_vMatrix");
-            var vMatrix = glMatrix.mat4.lookAt(glMatrix.mat4.create(), [0, 0, 3], [0, 0, 0], [0, 1, 0]);
+            var vMatrix = glMatrix.mat4.lookAt(glMatrix.mat4.create(), [0, 0, 4], [0, 0, 0], [0, 1, 0]);
             gl.uniformMatrix4fv(vMatrixUniform, false, vMatrix);
         }
 
