@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/103/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
+    <script src="js/physi.js"></script>
+
+    <script>
+
+        Physijs.scripts.worker = 'js/physijs_worker.js';
+
+        var scene = new Physijs.Scene;
+        scene.setGravity(new THREE.Vector3(0, -10, 0));
+
+        var sceneWidth = window.innerWidth;
+        var sceneHeight = window.innerHeight;
+
+        var camera = new THREE.PerspectiveCamera(90, sceneWidth / sceneHeight, 0.01, 100);
+        camera.position.set(0, -10, 15);
+        camera.lookAt(scene.position);
+
+        var texture = new THREE.TextureLoader().load("piedra.png")
+        var material = new THREE.MeshPhysicalMaterial({
+            map : texture
+        });
+
+        
+
+
+        
+    </script>
+
+</head>
+
+<body onload="init()">
+</body>
+
+</html>
