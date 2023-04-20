@@ -25,7 +25,7 @@
 
         /* Crear cámara, posición y lookAt */
         var camera = new THREE.PerspectiveCamera(90, sceneWidth / sceneHeight, 0.02, 100);
-        camera.position.set(0, 0, 14);
+        camera.position.set(0, -10, 14);
         camera.lookAt(scene.position);
 
         /* Crear renderizador con antialias activado, y dandole dimensiones y sombras activadas */
@@ -44,10 +44,10 @@
         /* Función que crea y añade luz a la escena, ambiental y direccional */
         function addLight(scene) {
             var lightDirectional = new THREE.DirectionalLight();
-            lightDirectional.position.set(2, 5, 5);
+            lightDirectional.position.set(5, 5, 5);
             lightDirectional.castShadow = true;
-            lightDirectional.shadow.camera.near = 0;
-            lightDirectional.shadow.camera.far = 16;
+            lightDirectional.shadow.camera.near = 3;
+            lightDirectional.shadow.camera.far = 50;
             lightDirectional.shadow.camera.left = -8;
             lightDirectional.shadow.camera.right = 5;
             lightDirectional.shadow.camera.top = 10;
@@ -95,13 +95,35 @@
             var mesh = new THREE.Mesh(geometry, material);
             mesh.receiveShadow = true; /* Activar que reciva sombra */
             scene.add(mesh);
+        }
+
+        function addBorders(scene, render) {
+            const geometryTop = new THREE.BoxGeometry( 25, 1, 4 );
+            var texture = new THREE.TextureLoader().load("Wood069_1K_Color.jpg", render);
+            var textureD = new THREE.TextureLoader().load("Wood069_1K_Displacement.jpg", render);
+            var textureR = new THREE.TextureLoader().load("Wood069_1K_Roughness.jpg", render);
+            var textureN = new THREE.TextureLoader().load("Wood069_1K_NormalGL.jpg", render);
+            var textureN2 = new THREE.TextureLoader().load("Wood069_1K_NormalDX.jpg", render);
+            var material = new THREE.MeshPhysicalMaterial({
+                map : textureD,
+                map: textureN,
+                map: textureR,
+                map: textureN2,
+                map: texture
+            });
+            var mesh = new THREE.Mesh(geometryTop, material);
+            mesh.receiveShadow = true; /* Activar que reciva sombra */
+            mesh.position.y = 11;
+            mesh.position.z = 0.1;
+            scene.add(mesh);
 
         }
 
         /* Funcion de inicio */
         function init() {
             addLight(scene);
-            addSphere(scene);
+            addSphere(scene, render);
+            addBorders(scene, render);
             addFloor(scene, render);
         }
         
