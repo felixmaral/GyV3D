@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+    <title>Breakout Game</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  </head>
+
+  <body onload="init()">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script> <!-- Carga la libreria Threejs -->
+
+    <script>
+
+        /* Crear escena */
+        var scene = new THREE.Scene();
+
+        /* Dar dimensiones a la escena */
+        var sceneWidth = window.innerWidth;
+        var sceneHeight = window.innerHeight;
+
+        /* Crear cámara, posición y lookAt */
+        var camera = new THREE.PerspectiveCamera(90, sceneWidth / sceneHeight, 0.02, 100);
+        camera.position.set(0, 0, 14);
+        camera.lookAt(scene.position);
+
+        /* Crear renderizador con antialias activado, y dandole dimensiones y sombras activadas */
+        var renderer = new THREE.WebGLRenderer({
+            antialias : true
+        });
+        renderer.shadowMap.enabled = true;
+        renderer.setSize(sceneWidth, sceneHeight);
+        document.body.appendChild(renderer.domElement);
+
+        /* Función que renderiza la escena */
+        var render = function() {
+            renderer.render(scene, camera);
+        };
+
+        /* Función que crea y añade luz a la escena, ambiental y direccional */
+        function addLight(scene) {
+            var lightDirectional = new THREE.DirectionalLight();
+            lightDirectional.position.set(2, 5, 5);
+            lightDirectional.castShadow = true;
+            lightDirectional.shadow.camera.near = 0;
+            lightDirectional.shadow.camera.far = 16;
+            lightDirectional.shadow.camera.left = -8;
+            lightDirectional.shadow.camera.right = 5;
+            lightDirectional.shadow.camera.top = 10;
+            lightDirectional.shadow.camera.bottom = -10;
+            lightDirectional.shadow.mapSize.width = 4096;
+            lightDirectional.shadow.mapSize.height = 4096;
+            scene.add(lightDirectional);
+        }
+
+        /* Funcion que crea una esfera con textura de madera y la añade a la escena */
+        function addSphere(scene) {
+            var geometry = new THREE.SphereGeometry(1, 20, 20);
+            var texture = new THREE.TextureLoader().load("Marble020_1K_Color.jpg", render);
+            var textureD = new THREE.TextureLoader().load("Marble020_1K_Displacement.jpg", render);
+            var textureR = new THREE.TextureLoader().load("Marble020_1K_Roughness.jpg", render);
+            var textureN = new THREE.TextureLoader().load("Metal036_1K_NormalGL.jpg", render);
+            var textureN2 = new THREE.TextureLoader().load("Metal036_1K_NormalDX.jpg", render);
+            var material = new THREE.MeshPhysicalMaterial({
+                map: textureR,
+                map: textureD,
+                map: textureN,
+                map: texture
+            }); 
+            var mesh = new THREE.Mesh(geometry, material);
+            mesh.castShadow = true; /* Activar que produzca sombra */
+            mesh.position.z = 1;
+            scene.add(mesh);
+        }
+
+        /* Funcion que crea un plano con textura de madera y la añade a la escena */
+        function addFloor(scene, render) {
+            var geometry = new THREE.PlaneGeometry(25, 25);
+            var texture = new THREE.TextureLoader().load("Wood069_1K_Color.jpg", render);
+            var textureD = new THREE.TextureLoader().load("Wood069_1K_Displacement.jpg", render);
+            var textureR = new THREE.TextureLoader().load("Wood069_1K_Roughness.jpg", render);
+            var textureN = new THREE.TextureLoader().load("Wood069_1K_NormalGL.jpg", render);
+            var textureN2 = new THREE.TextureLoader().load("Wood069_1K_NormalDX.jpg", render);
+            var material = new THREE.MeshPhysicalMaterial({
+                map : textureD,
+                map: textureN,
+                map: textureR,
+                map: textureN2,
+                map: texture
+            });
+            var mesh = new THREE.Mesh(geometry, material);
+            mesh.receiveShadow = true; /* Activar que reciva sombra */
+            scene.add(mesh);
+
+        }
+
+        /* Funcion de inicio */
+        function init() {
+            addLight(scene);
+            addSphere(scene);
+            addFloor(scene, render);
+        }
+        
+
+    </script>
+
+  </body>
+
+</html>
+
+
+
