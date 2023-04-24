@@ -45,15 +45,15 @@
 
         /* Función que crea y añade luz a la escena, ambiental y direccional */
         function addLight(scene) {
-            var lightDirectional = new THREE.DirectionalLight();
-            lightDirectional.position.set(8, 6, 6);
+            var lightDirectional = new THREE.SpotLight();
+            lightDirectional.position.set(20, -5, 20);
             lightDirectional.castShadow = true;
-            lightDirectional.shadow.camera.near = 3;
+            lightDirectional.shadow.camera.near = 1;
             lightDirectional.shadow.camera.far = 50;
-            lightDirectional.shadow.camera.left = -8;
-            lightDirectional.shadow.camera.right = 5;
-            lightDirectional.shadow.camera.top = 10;
-            lightDirectional.shadow.camera.bottom = -10;
+            lightDirectional.shadow.camera.left = -30;
+            lightDirectional.shadow.camera.right = 30;
+            lightDirectional.shadow.camera.top = 30;
+            lightDirectional.shadow.camera.bottom = -30;
             lightDirectional.shadow.mapSize.width = 4096;
             lightDirectional.shadow.mapSize.height = 4096;
             scene.add(lightDirectional);
@@ -68,11 +68,11 @@
             var texture = new THREE.TextureLoader().load("Marble020_1K_Color.jpg", render);
             var textureD = new THREE.TextureLoader().load("Marble020_1K_Displacement.jpg", render);
             var textureR = new THREE.TextureLoader().load("Marble020_1K_Roughness.jpg", render);
-            var textureN = new THREE.TextureLoader().load("Metal036_1K_NormalGL.jpg", render);
-            var textureN2 = new THREE.TextureLoader().load("Metal036_1K_NormalDX.jpg", render);
+            var textureN = new THREE.TextureLoader().load("Marble020_1K_NormalGL.jpg", render);
+            var textureN2 = new THREE.TextureLoader().load("Marble020_1K_NormalDX.jpg", render);
             var material = new THREE.MeshPhysicalMaterial({
                 roughnessMap: textureR,
-                displacementMap: textureD,
+                /* displacementMap: textureD, */
                 normalMap: textureN,
                 map: texture
             }); 
@@ -92,10 +92,10 @@
             var textureN = new THREE.TextureLoader().load("Wood069_1K_NormalGL.jpg", render);
             var textureN2 = new THREE.TextureLoader().load("Wood069_1K_NormalDX.jpg", render);
             var material = new THREE.MeshPhysicalMaterial({
-                map : textureD,
-                map: textureN,
-                map: textureR,
-                map: textureN2,
+                displacementMap: textureD,
+                normalMap: textureN,
+                roughnessMap: textureR,
+                normalMap: textureN2,
                 map: texture
             });
             var mesh = new THREE.Mesh(geometry, material);
@@ -124,6 +124,7 @@
             /* Borde de arriba */
             var mesh = new THREE.Mesh(geometryTop, material);
             mesh.receiveShadow = true; /* Activar que reciva sombra */
+            mesh.castShadow = true;
             mesh.position.y = 12.5;
             mesh.position.z = 1.5;
             mesh.name = "top";
@@ -145,6 +146,7 @@
             /* Borde de la izquierda */
             var mesh1 = new THREE.Mesh(geometrySides, material);
             mesh1.receiveShadow = true; /* Activar que reciva sombra */
+            mesh.castShadow = true;
             mesh1.position.x = -12.5;
             mesh1.position.z = 1.5;
             mesh1.name = "left";
@@ -152,6 +154,7 @@
             /* Borde de la derecha */
             var mesh2 = new THREE.Mesh(geometrySides, material);
             mesh2.receiveShadow = true; /* Activar que reciva sombra */
+            mesh.castShadow = true;
             mesh2.position.x = 12.5;
             mesh2.position.z = 1.5;
             mesh2.name = "right"
@@ -176,11 +179,11 @@
             var keyCode = event.which;
             // Mover la base a la izquierda si se presiona la tecla de flecha izquierda
             if ( keyCode == 37 && base.position.x > -9.5) {
-                base.position.x -= 0.35;
+                base.position.x -= 0.4;
             }
             // Mover la base a la derecha si se presiona la tecla de flecha derecha
             else if ( keyCode == 39 && base.position.x < 9.5) {
-                base.position.x += 0.35;
+                base.position.x += 0.4;
             }
         }
 
@@ -206,6 +209,10 @@
                     }            
                     break;
                 }
+                if (sphere.position.y <= -13) {
+                    stepX *= 0;
+                    stepY *= 0;
+                }
             }
         }
 
@@ -220,23 +227,21 @@
             renderer.setAnimationLoop( function() {
                 animate(sphere, borders, renderer, scene, camera);
             });
-   }
+        }
 
-        animate();
-
-        var stepX = 0.1;
+        var stepX = 0.13;
         var stepY = 0.2;  
     
         /* Funcion de inicio */
         function init() {
 
-            light = addLight(scene)[0];
-            DirectionalLight = addLight(scene)[1];
-            sphere = addSphere(scene);
-            top = addBorders(scene, render)[0];
-            left = addBorders(scene, render)[2];
-            right = addBorders(scene, render)[1];
-            floor = addFloor(scene, render);
+            var light = addLight(scene)[0];
+            var DirectionalLight = addLight(scene)[1];
+            var sphere = addSphere(scene);
+            var top = addBorders(scene, render)[0];
+            var left = addBorders(scene, render)[2];
+            var right = addBorders(scene, render)[1];
+            var floor = addFloor(scene, render);
 
             console.log(sphere.position)
             
