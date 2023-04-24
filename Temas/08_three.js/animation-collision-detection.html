@@ -16,7 +16,7 @@
       var sceneHeight = window.innerHeight - 20;
 
       var camera = new THREE.PerspectiveCamera(90, sceneWidth / sceneHeight, 0.01, 100);
-      camera.position.set(0, -10, 15); // Set the initial Camera Position.
+      camera.position.set(0, 0, 15); // Set the initial Camera Position.
       camera.lookAt(scene.position);
       
       var renderer = new THREE.WebGLRenderer({

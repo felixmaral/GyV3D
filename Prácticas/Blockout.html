@@ -13,6 +13,8 @@
   <body onload="init()">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script> <!-- Carga la libreria Threejs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script> <!-- Carga la libreria para utilizar controles -->
+
 
     <script>
 
@@ -20,12 +22,12 @@
         var scene = new THREE.Scene();
 
         /* Dar dimensiones a la escena */
-        var sceneWidth = window.innerWidth;
-        var sceneHeight = window.innerHeight;
+        var sceneWidth = window.innerWidth - 20;
+        var sceneHeight = window.innerHeight - 20;
 
         /* Crear cámara, posición y lookAt */
         var camera = new THREE.PerspectiveCamera(90, sceneWidth / sceneHeight, 0.02, 100);
-        camera.position.set(0, -15, 16);
+        camera.position.set(0, 0, 20);
         camera.lookAt(scene.position);
 
         /* Crear renderizador con antialias activado, y dandole dimensiones y sombras activadas */
@@ -44,7 +46,7 @@
         /* Función que crea y añade luz a la escena, ambiental y direccional */
         function addLight(scene) {
             var lightDirectional = new THREE.DirectionalLight();
-            lightDirectional.position.set(5, 5, 5);
+            lightDirectional.position.set(8, 6, 6);
             lightDirectional.castShadow = true;
             lightDirectional.shadow.camera.near = 3;
             lightDirectional.shadow.camera.far = 50;
@@ -56,8 +58,8 @@
             lightDirectional.shadow.mapSize.height = 4096;
             scene.add(lightDirectional);
 
-            var light = new THREE.AmbientLight(0xFFFFFF, 0.3);
-            scene.add(light);
+            var light = new THREE.AmbientLight(0xFFFFFF, 0.35);
+            return ([light, lightDirectional]);
         }
 
         /* Funcion que crea una esfera con textura de madera y la añade a la escena */
@@ -69,15 +71,16 @@
             var textureN = new THREE.TextureLoader().load("Metal036_1K_NormalGL.jpg", render);
             var textureN2 = new THREE.TextureLoader().load("Metal036_1K_NormalDX.jpg", render);
             var material = new THREE.MeshPhysicalMaterial({
-                map: textureR,
-                map: textureD,
-                map: textureN,
+                roughnessMap: textureR,
+                displacementMap: textureD,
+                normalMap: textureN,
                 map: texture
             }); 
             var mesh = new THREE.Mesh(geometry, material);
             mesh.castShadow = true; /* Activar que produzca sombra */
             mesh.position.z = 1;
-            scene.add(mesh);
+            mesh.name = "sphere";
+            return mesh;
         }
 
         /* Funcion que crea un plano con textura de madera y la añade a la escena */
@@ -97,7 +100,8 @@
             });
             var mesh = new THREE.Mesh(geometry, material);
             mesh.receiveShadow = true; /* Activar que reciva sombra */
-            scene.add(mesh);
+            mesh.name = "floor";
+            return mesh;
         }
 
         /* Funcion que crea los bordes con texturas de madera y los añade a la escena */
@@ -122,7 +126,7 @@
             mesh.receiveShadow = true; /* Activar que reciva sombra */
             mesh.position.y = 12.5;
             mesh.position.z = 1.5;
-            scene.add(mesh);
+            mesh.name = "top";
 
             const geometrySides = new THREE.BoxGeometry( 1, 25, 3 );
             var texture = new THREE.TextureLoader().load("Wood069_1K_Color.jpg", render);
@@ -139,26 +143,151 @@
             });
 
             /* Borde de la izquierda */
-            var mesh = new THREE.Mesh(geometrySides, material);
-            mesh.receiveShadow = true; /* Activar que reciva sombra */
-            mesh.position.x = -12.5;
-            mesh.position.z = 1.5;
-            scene.add(mesh);
+            var mesh1 = new THREE.Mesh(geometrySides, material);
+            mesh1.receiveShadow = true; /* Activar que reciva sombra */
+            mesh1.position.x = -12.5;
+            mesh1.position.z = 1.5;
+            mesh1.name = "left";
 
             /* Borde de la derecha */
-            var mesh = new THREE.Mesh(geometrySides, material);
-            mesh.receiveShadow = true; /* Activar que reciva sombra */
-            mesh.position.x = 12.5;
-            mesh.position.z = 1.5;
-            scene.add(mesh);
+            var mesh2 = new THREE.Mesh(geometrySides, material);
+            mesh2.receiveShadow = true; /* Activar que reciva sombra */
+            mesh2.position.x = 12.5;
+            mesh2.position.z = 1.5;
+            mesh2.name = "right"
+            
+
+            return ([mesh, mesh2, mesh1])
         }
 
+        // Crear una base movil
+        var baseGeometry = new THREE.BoxGeometry(5, 1, 2);
+        var material = new THREE.MeshPhysicalMaterial({color: 0xf6f6f6});
+        var base = new THREE.Mesh(baseGeometry, material);
+        base.position.y = -13;
+        base.position.z = 1.02;
+        base.name = "base"
+        scene.add(base);
+
+        // Agregar un controlador de eventos de teclado
+        document.addEventListener('keydown', onDocumentKeyDown, false);
+
+        function onDocumentKeyDown( event ) {
+            var keyCode = event.which;
+            // Mover la base a la izquierda si se presiona la tecla de flecha izquierda
+            if ( keyCode == 37 && base.position.x > -9.5) {
+                base.position.x -= 0.35;
+            }
+            // Mover la base a la derecha si se presiona la tecla de flecha derecha
+            else if ( keyCode == 39 && base.position.x < 9.5) {
+                base.position.x += 0.35;
+            }
+        }
+
+        function checkCollision(sphere, borders) {
+            var originPosition = sphere.position.clone();
+
+            const positionAttribute = sphere.geometry.getAttribute( 'position' );
+            const localVertex = new THREE.Vector3();
+            const globalVertex = new THREE.Vector3();
+            for ( let vertexIndex = 0; vertexIndex < positionAttribute.count; vertexIndex ++ ) {
+                localVertex.fromBufferAttribute( positionAttribute, vertexIndex );
+                globalVertex.copy( localVertex ).applyMatrix4( sphere.matrixWorld );
+                var directionVector = globalVertex.sub(sphere.position);
+                var ray = new THREE.Raycaster(originPosition, directionVector.clone().normalize());
+                var collisionResults = ray.intersectObjects(borders);
+                if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+                    // Collision detected
+                    if (collisionResults[0].object.name == "left" || collisionResults[0].object.name == "right") {
+                    stepX *= -1;
+                    }
+                    if (collisionResults[0].object.name == "base" || collisionResults[0].object.name == "top") {
+                    stepY *= -1;
+                    }            
+                    break;
+                }
+            }
+        }
+
+        function animate(sphere, borders, renderer, scene, camera) {
+            checkCollision(sphere, borders);
+            
+            sphere.position.x += stepX;
+            sphere.position.y += stepY;
+
+            renderer.render(scene, camera);
+
+            renderer.setAnimationLoop( function() {
+                animate(sphere, borders, renderer, scene, camera);
+            });
+   }
+
+        animate();
+
+        var stepX = 0.1;
+        var stepY = 0.2;  
+    
         /* Funcion de inicio */
         function init() {
-            addLight(scene);
-            addSphere(scene, render);
-            addBorders(scene, render);
-            addFloor(scene, render);
+
+            light = addLight(scene)[0];
+            DirectionalLight = addLight(scene)[1];
+            sphere = addSphere(scene);
+            top = addBorders(scene, render)[0];
+            left = addBorders(scene, render)[2];
+            right = addBorders(scene, render)[1];
+            floor = addFloor(scene, render);
+
+            console.log(sphere.position)
+            
+            scene.add(light);
+            scene.add(base);
+            scene.add(DirectionalLight);
+            scene.add(top);
+            scene.add(left);
+            scene.add(right);
+            scene.add(floor);
+            scene.add(sphere);
+
+            var borders = [ left, right, top, base ];
+
+            render();
+            
+            // Control de camara 
+            var control = new function() {
+                this.fov = camera.fov;
+                this.aspect = camera.aspect;
+                this.far = camera.far;
+                this.near = camera.near;
+                this.x = camera.position.x;
+                this.y = camera.position.y;
+                this.z = camera.position.z;
+
+                this.update = function() {
+                    camera.fov = control.fov;
+                    camera.aspect = control.aspect;
+                    camera.near = control.near;
+                    camera.far = control.far;
+                    camera.position.x = control.x;
+                    camera.position.y = control.y;
+                    camera.position.z = control.z;
+                    camera.lookAt(scene.position);
+    
+                    camera.updateProjectionMatrix();
+                }
+            };
+
+            var gui = new dat.GUI();
+            gui.add(control, 'fov', 0, 180).onChange(control.update);
+            gui.add(control, 'aspect', 0, 4).onChange(control.update);
+            gui.add(control, 'near', 0, 40).onChange(control.update);
+            gui.add(control, 'far', 0, 1000).onChange(control.update);
+            gui.add(control, 'x', -30, 30).onChange(control.update);
+            gui.add(control, 'y', -30, 30).onChange(control.update);
+            gui.add(control, 'z', -30, 30).onChange(control.update);
+
+            animate(sphere, borders, renderer, scene, camera);
+
         }
         
 
