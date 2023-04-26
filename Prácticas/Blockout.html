@@ -169,6 +169,10 @@
         base.name = "base"
         scene.add(base);
 
+        var change = new THREE.Mesh(baseGeometry, material);
+        change.position.y = -30;
+        change.position.z = 1.02;
+
         /* Crear bricks */
         function addBricks(scene, render) {
             const bricks = [];
@@ -206,11 +210,11 @@
             var keyCode = event.which;
             // Mover la base a la izquierda si se presiona la tecla de flecha izquierda
             if ( keyCode == 37 && base.position.x > -9.5) {
-                base.position.x -= 0.4;
+                base.position.x -= 0.52;
             }
             // Mover la base a la derecha si se presiona la tecla de flecha derecha
             else if ( keyCode == 39 && base.position.x < 9.5) {
-                base.position.x += 0.4;
+                base.position.x += 0.52;
             }
         }
 
@@ -239,121 +243,121 @@
                     if (collisionResults[0].object.name == "obj00") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(4,1)
+                    borders.splice(4,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj01") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(5,1)
+                    borders.splice(5,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj02") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(6,1)
+                    borders.splice(6,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj03") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(7,1)
+                    borders.splice(7,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj10") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(8,1)
+                    borders.splice(8,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj11") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(9,1)
+                    borders.splice(9,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj12") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(10,1)
+                    borders.splice(10,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj13") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(11,1)
+                    borders.splice(11,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj20") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(12,1)
+                    borders.splice(12,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj21") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(13,1,0)
+                    borders.splice(13,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj22") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(14,1)
+                    borders.splice(14,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj23") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(15,1)
+                    borders.splice(15,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj30") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(16,1)
+                    borders.splice(16,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj31") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(17,1)
+                    borders.splice(17,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj32") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(18,1)
+                    borders.splice(18,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj33") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(19,1)
+                    borders.splice(19,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj40") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(20,1)
+                    borders.splice(20,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj41") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(21,1)
+                    borders.splice(21,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj42") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(22,1)
+                    borders.splice(22,1,change)
                     audio.play();
                     } 
                     if (collisionResults[0].object.name == "obj43") {
                     stepY *= -1;
                     scene.remove(collisionResults[0].object)
-                    borders.splice(23,1)
+                    borders.splice(23,1,change)
                     audio.play();
                     } 
                     break;
@@ -400,8 +404,8 @@
         // Añade el objeto THREE.PositionalAudio a la escena como un hijo del objeto que va a colisionar
         scene.add(audio);
 
-        var stepX = 0.13;
-        var stepY = 0.2;  
+        var stepX = 0.4;
+        var stepY = 0.3;  
     
         /* Funcion de inicio */
         function init() {
