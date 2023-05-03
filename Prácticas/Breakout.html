@@ -13,6 +13,10 @@
   <style>
 
 		body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: larger;
+            color: rgb(23, 147, 255);
+            background-color: rgb(66, 66, 66);
 			margin: 0;
 			padding: 0;
 			display: flex;
@@ -31,6 +35,11 @@
             margin: 20px;
         }
 
+        #gamestatus {
+            font-size: 40px;
+            text-align: center;
+        }
+
   </style>
 
   <body onload="init()">
@@ -42,7 +51,7 @@
     <div id="container">
 
         <div id="gamestatus"></div>
-        <span>Lifes: <span id="lifes">3</span></span>
+        <span>Lifes: <span id="lifes">3</span>           </span>
         <span>Points: <span id="points">0</span></span>
 
     </div>
@@ -53,8 +62,8 @@
         var scene = new THREE.Scene();
 
         /* Dar dimensiones a la escena */
-        var sceneWidth = window.innerWidth - 150;
-        var sceneHeight = window.innerHeight - 150;
+        var sceneWidth = window.innerWidth - 220;
+        var sceneHeight = window.innerHeight - 220;
 
         /* Crear cámara, posición y lookAt */
         var camera = new THREE.PerspectiveCamera(90, sceneWidth / sceneHeight, 0.02, 100);
@@ -251,12 +260,12 @@
 
         bricks = 0;
         count = 0;
+        speedbase = 0.18;
 
         function checkCollision(sphere, borders) {
             var originPosition = sphere.position.clone();
             var positionBreak = 2;
             var positionHit;
-            speed = 0.18;
 
             const positionAttribute = sphere.geometry.getAttribute( 'position' );
             const localVertex = new THREE.Vector3();
@@ -292,7 +301,7 @@
                         positionBreak = Math.abs(positionBreak) + 50;
                         positionHit = Math.abs(base.position.x) + 50;
                         console.log(Math.abs(positionHit - positionBreak))
-                        speed = Math.abs(positionHit - positionBreak) * 0.01 + 0.32;
+                        speed = Math.abs(positionHit - positionBreak) * 0.01 + speedbase;
 
                         // Calcular la posición relativa de la colisión
                         var collisionPoint = collisionResults[0].point;
@@ -684,8 +693,8 @@
                         sphere.position.z = 1;
 
                         /* Movimiento inicial */
-                        stepX = 0;
-                        stepY = -0.1;
+                        stepX = (Math.random() - 0.5) * 0.18;
+                        stepY = -0.18;
 
                     }
                 }
@@ -700,8 +709,6 @@
             }
         }
 
-
-        
         lifesGame = 3;
         pointsGame = 0;
 
@@ -710,6 +717,59 @@
             points: document.getElementById("points"),
             lifes: document.getElementById("lifes")
         }
+
+        function pause(event) {
+            if (event.key === "Escape" || event.key === "Esc") { // Comprueba si se presionó la tecla "Escape"
+                saveStepX = stepX;
+                saveStepY = stepY;
+                document.getElementById("gamestatus").innerHTML = "PAUSE"
+                stepX = 0;
+                stepY = 0;
+            }
+        }
+
+        function play(event) {
+            if (event.key === "Enter") {
+                stepX = saveStepX;
+                stepY = saveStepY;
+                document.getElementById("gamestatus").innerHTML = ""
+            }
+        }
+
+        resetButton = document.getElementById("reset");
+
+        function reset() {
+            // Añadir los objetos a la escena
+            bricks.forEach(brick => {
+                scene.add(brick.mesh);
+                bricksMesh.push(brick.mesh)
+            });
+
+            console.log(bricksMesh)
+
+
+            borders = [ left, right, top, base ];
+
+            bricksMesh.forEach(brick => {
+                borders.push(brick)
+            });
+
+            render();
+
+
+
+
+            pointsGame = 0;
+            lifesGame = 3;
+
+            game.points.innerHTML = pointsGame;
+            game.lifes.innerHTML = lifesGame;
+
+            stepX = (Math.random() - 0.5) * 0.18
+            stepY = -0.18
+        }
+
+        
 
         function addPoints(points) {
             sum = pointsGame += points
@@ -751,7 +811,7 @@
         // Añade el objeto THREE.PositionalAudio a la escena como un hijo del objeto que va a colisionar
         scene.add(audio);
 
-        var stepX = 0;
+        var stepX = (Math.random() - 0.5) * 0.18
         var stepY = -0.15;  
     
         /* Funcion de inicio */
@@ -807,6 +867,7 @@
                 this.x = camera.position.x;
                 this.y = camera.position.y;
                 this.z = camera.position.z;
+                this.Level = speedbase;
 
                 this.update = function() {
                     camera.fov = control.fov;
@@ -819,6 +880,8 @@
                     camera.lookAt(scene.position);
     
                     camera.updateProjectionMatrix();
+
+                    speedbase = control.Level * 0.2 + 0.2;
                 }
             };
 
@@ -830,13 +893,18 @@
             gui.add(control, 'x', -30, 30).onChange(control.update);
             gui.add(control, 'y', -30, 30).onChange(control.update);
             gui.add(control, 'z', -30, 30).onChange(control.update);
+            gui.add(control, 'Level', 0, 2).onChange(control.update);
 
             animate(sphere, borders, renderer, scene, camera);
+            document.addEventListener('keydown', pause, false);
+            document.addEventListener('keydown', play, false);
 
         }
         
 
     </script>
+
+    <!-- <button id="reset">Reiniciar</button> -->
 
   </body>
 
