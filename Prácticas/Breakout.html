@@ -222,16 +222,20 @@
                 for (let j = 0; j < 4; j++) {
                 const nombre = `obj${i}${j}`; // nombre del objeto
                 const geometria = new THREE.BoxGeometry(4, 1, 1); // geometria del objeto
-                var texture = new THREE.TextureLoader().load("texturasBlockout/Fabric024_1K_Color.jpg", render);
-                var textureD = new THREE.TextureLoader().load("texturasBlockout/Fabric024_1K_Displacement.jpg", render);
-                var textureR = new THREE.TextureLoader().load("texturasBlockout/Fabric024_1K_Roughness.jpg", render);
-                var textureN = new THREE.TextureLoader().load("texturasBlockout/Fabric024_1K_NormalGL.jpg", render);
-                var textureN2 = new THREE.TextureLoader().load("texturasBlockout/Fabric024_1K_NormalDX.jpg", render);
+                var texture = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_Color.jpg", render);
+                var textureD = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_Displacement.jpg", render);
+                var textureR = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_Roughness.jpg", render);
+                var textureN = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_NormalGL.jpg", render);
+                var textureN2 = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_NormalDX.jpg", render);
+                var textureM = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_Metalness.jpg", render);
+                // Creación del material
                 var material = new THREE.MeshPhysicalMaterial({
-                    normalMap: textureN,
+                    map: texture,
+                    displacementMap: textureD,
                     roughnessMap: textureR,
-                    normalMap: textureN2,
-                    map: texture
+                    normalMap: textureN,
+                    metalnessMap: textureM,
+                    clearcoatNormalMap: textureN2 // Especificar un segundo mapa normal
                 });
                 const mesh = new THREE.Mesh(geometria, material); // mesh del objeto
                 mesh.name = nombre;
