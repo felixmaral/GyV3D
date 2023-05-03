@@ -10,11 +10,42 @@
 
   </head>
 
+  <style>
+
+		body {
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		canvas {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+        #container {
+            margin: 20px;
+        }
+
+  </style>
+
   <body onload="init()">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script> <!-- Carga la libreria Threejs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script> <!-- Carga la libreria para utilizar controles -->
+    
 
+    <div id="container">
+
+        <div id="gamestatus"></div>
+        <span>Lifes: <span id="lifes">3</span></span>
+        <span>Points: <span id="points">0</span></span>
+
+    </div>
 
     <script>
 
@@ -22,12 +53,12 @@
         var scene = new THREE.Scene();
 
         /* Dar dimensiones a la escena */
-        var sceneWidth = window.innerWidth - 20;
-        var sceneHeight = window.innerHeight - 20;
+        var sceneWidth = window.innerWidth - 150;
+        var sceneHeight = window.innerHeight - 150;
 
         /* Crear cámara, posición y lookAt */
         var camera = new THREE.PerspectiveCamera(90, sceneWidth / sceneHeight, 0.02, 100);
-        camera.position.set(0, 0, 20);
+        camera.position.set(0, -10, 20);
         camera.lookAt(scene.position);
 
         /* Crear renderizador con antialias activado, y dandole dimensiones y sombras activadas */
@@ -210,20 +241,22 @@
             var keyCode = event.which;
             // Mover la base a la izquierda si se presiona la tecla de flecha izquierda
             if ( keyCode == 37 && base.position.x > -9.5) {
-                base.position.x -= 1.2;
+                base.position.x -= 0.6;
             }
             // Mover la base a la derecha si se presiona la tecla de flecha derecha
             else if ( keyCode == 39 && base.position.x < 9.5) {
-                base.position.x += 1.2;
+                base.position.x += 0.6;
             }
         }
+
+        bricks = 0;
+        count = 0;
 
         function checkCollision(sphere, borders) {
             var originPosition = sphere.position.clone();
             var positionBreak = 2;
             var positionHit;
-            speed = 0.25;
-
+            speed = 0.18;
 
             const positionAttribute = sphere.geometry.getAttribute( 'position' );
             const localVertex = new THREE.Vector3();
@@ -247,12 +280,19 @@
 
                     if (collisionResults[0].object.name == "base") {
 
+                        if (count >= 3) {
+                            pointsGame *= 2;
+                            addPoints(0);
+                        }
+
+                        count = 0;
+
                         /* Velocidad variable */
 
                         positionBreak = Math.abs(positionBreak) + 50;
                         positionHit = Math.abs(base.position.x) + 50;
                         console.log(Math.abs(positionHit - positionBreak))
-                        speed = Math.abs(positionHit - positionBreak) * 0.01 + 0.23;
+                        speed = Math.abs(positionHit - positionBreak) * 0.01 + 0.18;
 
                         // Calcular la posición relativa de la colisión
                         var collisionPoint = collisionResults[0].point;
@@ -305,6 +345,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(2);
                     borders.splice(4,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -317,6 +361,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(2);
                     borders.splice(5,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -329,6 +377,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(1);
                     borders.splice(6,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -341,6 +393,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(1);
                     borders.splice(7,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -353,6 +409,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(2);
                     borders.splice(8,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -365,6 +425,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(2);
                     borders.splice(9,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -377,6 +441,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(1);
                     borders.splice(10,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -389,6 +457,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(1);
                     borders.splice(11,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -401,6 +473,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(2);
                     borders.splice(12,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -413,6 +489,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(2);
                     borders.splice(13,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -425,6 +505,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(1);
                     borders.splice(14,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -437,6 +521,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(1);
                     borders.splice(15,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -449,6 +537,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(2);
                     borders.splice(16,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -461,6 +553,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(2);
                     borders.splice(17,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -473,6 +569,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(1);
                     borders.splice(18,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -485,6 +585,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(1);
                     borders.splice(19,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -497,6 +601,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(2);
                     borders.splice(20,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -509,6 +617,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(2);
                     borders.splice(21,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -521,6 +633,10 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(1);
                     borders.splice(22,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -533,17 +649,71 @@
                             stepY *= -1;
                         }
                     scene.remove(collisionResults[0].object)
+                    count = count + 1;
+                    bricks = bricks + 1;
+                    console.log(count, bricks)
+                    addPoints(1);
                     borders.splice(23,1,change)
                     positionBreak = base.position.x;
                     audio.play();
                     } 
                     break;
                 }
+
                 if (sphere.position.y <= -13) {
+
+                    if (lifesGame >= 1 ) {
+                        lifesGame -= 1;
+                    game.lifes.innerHTML = lifesGame;
+
+                    console.log(lifesGame)
+                    }
+
+                    if (lifesGame == 0) {
+                        
+                        document.getElementById("gamestatus").innerHTML = "GAME OVER"
+
+                        stepX *= 0;
+                        stepY *= 0;
+
+                    } else if (lifesGame > 0) {
+
+                        /* Resetear a posición inicial */
+                        sphere.position.x = 0;
+                        sphere.position.y = 0;
+                        sphere.position.z = 1;
+
+                        /* Movimiento inicial */
+                        stepX = 0;
+                        stepY = -0.1;
+
+                    }
+                }
+
+                if (bricks == 20) {
+
+                    document.getElementById("gamestatus").innerHTML = "YOU WIN! with " + pointsGame + " points"
+
                     stepX *= 0;
                     stepY *= 0;
                 }
             }
+        }
+
+
+        
+        lifesGame = 3;
+        pointsGame = 0;
+
+        /* Atributos del juego */
+        game = {
+            points: document.getElementById("points"),
+            lifes: document.getElementById("lifes")
+        }
+
+        function addPoints(points) {
+            sum = pointsGame += points
+            game.points.innerHTML = sum;
         }
 
         function animate(sphere, borders, renderer, scene, camera) {
