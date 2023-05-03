@@ -85,8 +85,8 @@
 
         /* Función que crea y añade luz a la escena, ambiental y direccional */
         function addLight(scene) {
-            var lightDirectional = new THREE.SpotLight(0xffffff, 0.35);;
-            lightDirectional.position.set(20, -5, 20);
+            lightDirectional = new THREE.SpotLight(0xffffff, 0.35);;
+            lightDirectional.position.set(5, 20, 25);
             lightDirectional.castShadow = true;
             lightDirectional.shadow.camera.near = 1;
             lightDirectional.shadow.camera.far = 50;
@@ -202,7 +202,19 @@
 
         // Crear una base movil
         var baseGeometry = new THREE.BoxGeometry(5, 1, 2);
-        var material = new THREE.MeshPhysicalMaterial({color: 0xf6f6f6});
+        var texture = new THREE.TextureLoader().load("texturasBlockout/Fabric026_1K_Color.jpg", render);
+        var textureR = new THREE.TextureLoader().load("texturasBlockout/Fabric026_1K_Roughness.jpg", render);
+        var textureN = new THREE.TextureLoader().load("texturasBlockout/Fabric026_1K_NormalGL.jpg", render);
+        var textureN2 = new THREE.TextureLoader().load("texturasBlockout/Marble020_1K_NormalDX.jpg", render);
+        var textureM = new THREE.TextureLoader().load("texturasBlockout/.jpg", render);
+         // Creación del material
+         var material = new THREE.MeshPhysicalMaterial({
+                    map: texture,
+                    roughnessMap: textureR,
+                    normalMap: textureN,
+                    metalnessMap: textureM,
+                    clearcoatNormalMap: textureN2 // Especificar un segundo mapa normal
+                });
         var base = new THREE.Mesh(baseGeometry, material);
         base.position.y = -13;
         base.position.z = 1.02;
@@ -222,16 +234,15 @@
                 for (let j = 0; j < 4; j++) {
                 const nombre = `obj${i}${j}`; // nombre del objeto
                 const geometria = new THREE.BoxGeometry(4, 1, 1); // geometria del objeto
-                var texture = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_Color.jpg", render);
-                var textureD = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_Displacement.jpg", render);
-                var textureR = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_Roughness.jpg", render);
-                var textureN = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_NormalGL.jpg", render);
-                var textureN2 = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_NormalDX.jpg", render);
-                var textureM = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_Metalness.jpg", render);
+                var texture = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_Color.png", render);
+                var textureD = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_Displacement.png", render);
+                var textureR = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_Roughness.png", render);
+                var textureN = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_NormalGL.png", render);
+                var textureN2 = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_NormalDX.png", render);
+                var textureM = new THREE.TextureLoader().load("texturasBlockout/metal/Metal003_1K_Metalness.png", render);
                 // Creación del material
                 var material = new THREE.MeshPhysicalMaterial({
                     map: texture,
-                    displacementMap: textureD,
                     roughnessMap: textureR,
                     normalMap: textureN,
                     metalnessMap: textureM,
@@ -865,22 +876,23 @@
             // Control de camara 
             var control = new function() {
                 this.fov = camera.fov;
-                this.aspect = camera.aspect;
-                this.far = camera.far;
-                this.near = camera.near;
-                this.x = camera.position.x;
-                this.y = camera.position.y;
-                this.z = camera.position.z;
+                this.Cx = camera.position.x;
+                this.Cy = camera.position.y;
+                this.Cz = camera.position.z;
+                this.Lx = lightDirectional.position.x;
+                this.Ly = lightDirectional.position.y;
+                this.Lz = lightDirectional.position.z;
                 this.Level = speedbase;
+
 
                 this.update = function() {
                     camera.fov = control.fov;
-                    camera.aspect = control.aspect;
-                    camera.near = control.near;
-                    camera.far = control.far;
-                    camera.position.x = control.x;
-                    camera.position.y = control.y;
-                    camera.position.z = control.z;
+                    camera.position.x = control.Cx;
+                    camera.position.y = control.Cy;
+                    camera.position.z = control.Cz;
+                    lightDirectional.position.x = control.Lx;
+                    lightDirectional.position.y = control.Ly;
+                    lightDirectional.position.z = control.Lz;
                     camera.lookAt(scene.position);
     
                     camera.updateProjectionMatrix();
@@ -891,12 +903,12 @@
 
             var gui = new dat.GUI();
             gui.add(control, 'fov', 0, 180).onChange(control.update);
-            gui.add(control, 'aspect', 0, 4).onChange(control.update);
-            gui.add(control, 'near', 0, 40).onChange(control.update);
-            gui.add(control, 'far', 0, 1000).onChange(control.update);
-            gui.add(control, 'x', -30, 30).onChange(control.update);
-            gui.add(control, 'y', -30, 30).onChange(control.update);
-            gui.add(control, 'z', -30, 30).onChange(control.update);
+            gui.add(control, 'Cx', -30, 30).onChange(control.update);
+            gui.add(control, 'Cy', -30, 30).onChange(control.update);
+            gui.add(control, 'Cz', -30, 30).onChange(control.update);
+            gui.add(control, 'Lx', -30, 30).onChange(control.update);
+            gui.add(control, 'Ly', -30, 30).onChange(control.update);
+            gui.add(control, 'Lz', -30, 30).onChange(control.update);
             gui.add(control, 'Level', 0, 2).onChange(control.update);
 
             animate(sphere, borders, renderer, scene, camera);
