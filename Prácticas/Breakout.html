@@ -13,10 +13,11 @@
   <style>
 
 		body {
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-            font-size: larger;
-            color: rgb(23, 147, 255);
-            background-color: rgb(66, 66, 66);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 20px;
+            color: rgb(255, 255, 255);
+            background: linear-gradient(165deg, rgba(2,0,36,1) 0%, rgba(9,9,121,0.9136029411764706) 49%, rgb(17, 0, 255) 100%);
+            background-repeat: no-repeat;
 			margin: 0;
 			padding: 0;
 			display: flex;
@@ -33,11 +34,17 @@
 
         #container {
             margin: 20px;
+            text-align: center;
         }
 
         #gamestatus {
             font-size: 40px;
             text-align: center;
+        }
+
+        #gamestatus, #container {
+            z-index: 9999;
+            
         }
 
   </style>
@@ -48,11 +55,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script> <!-- Carga la libreria para utilizar controles -->
     
 
+    <div id="gamestatus"></div>
+
     <div id="container">
 
-        <div id="gamestatus"></div>
-        <span>Lifes: <span id="lifes">3</span>           </span>
-        <span>Points: <span id="points">0</span></span>
+        <div>Lifes: <span id="lifes">3</span></div>
+        <div>Points: <span id="points">0</span></div>
 
     </div>
 
@@ -62,8 +70,8 @@
         var scene = new THREE.Scene();
 
         /* Dar dimensiones a la escena */
-        var sceneWidth = window.innerWidth - 220;
-        var sceneHeight = window.innerHeight - 220;
+        var sceneWidth = window.innerWidth - 300;
+        var sceneHeight = window.innerHeight - 300;
 
         /* Crear cámara, posición y lookAt */
         var camera = new THREE.PerspectiveCamera(90, sceneWidth / sceneHeight, 0.02, 100);
@@ -695,10 +703,12 @@
 
                     if (lifesGame == 0) {
                         
-                        document.getElementById("gamestatus").innerHTML = "GAME OVER"
+                        document.getElementById("gamestatus").innerHTML = " GAME OVER "
 
                         stepX *= 0;
                         stepY *= 0;
+
+                        scene.remove(sphere);
 
                     } else if (lifesGame > 0) {
 
@@ -716,7 +726,7 @@
 
                 if (bricks == 20) {
 
-                    document.getElementById("gamestatus").innerHTML = "YOU WIN! with " + pointsGame + " points"
+                    document.getElementById("gamestatus").innerHTML = " ¡YOU WIN! "
 
                     stepX *= 0;
                     stepY *= 0;
