@@ -40,13 +40,34 @@
         }
 
         #gamestatus {
-            font-size: 40px;
+            font-size: 15px;
             text-align: center;
         }
 
         #gamestatus, #container {
             z-index: 9999;
             
+        }
+
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            margin: auto;
+            text-align: start;
+            background: linear-gradient(white, aliceblue);
+            border-radius: 10px;
+        }
+
+        .uno {
+            width: 10%;
+        }
+
+        .dos {
+            width: 50%;
+        }
+
+        .tres {
+            width: 10%;
         }
 
         /*** BOTÓN SLIDE LEFT ***/
@@ -67,9 +88,11 @@
             text-align: center;
             cursor: pointer;
         }
+
         button:hover {
             color: white; /* color de fuente hover */
         }
+
         button::after {
             content: "";
             background: linear-gradient(165deg, rgba(2,0,36,1) 0%, rgba(9,9,121,0.9136029411764706) 49%, rgb(17, 0, 255) 100%); /* color de fondo hover */
@@ -84,6 +107,7 @@
             -webkit-transition: all 0.35s;
             transition: all 0.35s;
         }
+
         button:hover::after {
             left: 0;
             right: 0;
@@ -93,6 +117,10 @@
             transition: all 0.35s;
         }
 
+        .score {
+            font-size: 30px;
+        }
+
   </style>
 
   <body onload="init()">
@@ -100,19 +128,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script> <!-- Carga la libreria Threejs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script> <!-- Carga la libreria para utilizar controles -->
     
-
-    <div id="gamestatus">Press ESC to pause</div>
-
-    <div id="container">
-
-        <div>Lifes: <span id="lifes">3</span></div>
-        <div>Points: <span id="points">0</span></div>
-
+    <div class="columna uno">
+        <div class="score">🤍 <span id="lifes">3</span></div>
+        <div class="score">🧱  <span id="points">0</span></div>
     </div>
 
-    <span>
+    <div class="columnas dos">
+        <div id="container">
+
+            <h2>BREAKOUT</h2>
+            <div id="gamestatus">Press ESC to pause</div>
+        
+        </div>
+    </div>
+
+    <div class="columna tres">
         <button onclick="reloadPage()">New Game</button>
-    </span>
+    </div>
 
     <script>
         function reloadPage() {
@@ -341,7 +373,7 @@
 
         bricks = 0;
         count = 0;
-        speedbase = 0.18;
+        speedbase = 0.25;
 
         function checkCollision(sphere, borders) {
             var originPosition = sphere.position.clone();
@@ -805,7 +837,7 @@
             if (event.key === "Escape" || event.key === "Esc") { // Comprueba si se presionó la tecla "Escape"
                 saveStepX = stepX;
                 saveStepY = stepY;
-                document.getElementById("gamestatus").innerHTML = "PAUSE"
+                document.getElementById("gamestatus").innerHTML = "PAUSE - Press ENTER to continue"
                 stepX = 0;
                 stepY = 0;
             }
@@ -977,7 +1009,7 @@
             gui.add(control, 'Lx', -30, 30).onChange(control.update);
             gui.add(control, 'Ly', -30, 30).onChange(control.update);
             gui.add(control, 'Lz', -30, 30).onChange(control.update);
-            gui.add(control, 'Level', 0, 2).onChange(control.update);
+            gui.add(control, 'Level', 0, 1.4).onChange(control.update);
 
             animate(sphere, borders, renderer, scene, camera);
             document.addEventListener('keydown', pause, false);
