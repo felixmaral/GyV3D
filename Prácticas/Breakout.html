@@ -8,6 +8,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
+    <!--  -->
+
   </head>
 
   <style>
@@ -47,6 +49,50 @@
             
         }
 
+        /*** BOTÓN SLIDE LEFT ***/
+
+        button {
+            background: white; /* color de fondo */
+            color: linear-gradient(165deg, rgba(2,0,36,1) 0%, rgba(9,9,121,0.9136029411764706) 49%, rgb(17, 0, 255) 100%); /* color de fuente */
+            padding: 16px 20px;
+            border: solid 2px white;
+            border-radius: 10px; /* redondear bordes */
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            display: inline-block;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            height: auto;
+            text-align: center;
+            cursor: pointer;
+        }
+        button:hover {
+            color: white; /* color de fuente hover */
+        }
+        button::after {
+            content: "";
+            background: linear-gradient(165deg, rgba(2,0,36,1) 0%, rgba(9,9,121,0.9136029411764706) 49%, rgb(17, 0, 255) 100%); /* color de fondo hover */
+            position: absolute;
+            z-index: -1;
+            padding: 16px 20px;
+            display: block;
+            top: 0;
+            bottom: 0;
+            left: -100%;
+            right: 100%;
+            -webkit-transition: all 0.35s;
+            transition: all 0.35s;
+        }
+        button:hover::after {
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            -webkit-transition: all 0.35s;
+            transition: all 0.35s;
+        }
+
   </style>
 
   <body onload="init()">
@@ -55,7 +101,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script> <!-- Carga la libreria para utilizar controles -->
     
 
-    <div id="gamestatus"></div>
+    <div id="gamestatus">Press ESC to pause</div>
 
     <div id="container">
 
@@ -64,10 +110,24 @@
 
     </div>
 
+    <span>
+        <button onclick="reloadPage()">New Game</button>
+    </span>
+
+    <script>
+        function reloadPage() {
+          location.reload();
+        }
+    </script>
+
     <script>
 
         /* Crear escena */
         var scene = new THREE.Scene();
+        var loader1 = new THREE.TextureLoader();
+        loader1.load('texturasBlockout/fondo.jpg', function(texture) {
+            scene.background = texture;
+        });
 
         /* Dar dimensiones a la escena */
         var sceneWidth = window.innerWidth - 300;
@@ -94,10 +154,10 @@
         /* Función que crea y añade luz a la escena, ambiental y direccional */
         function addLight(scene) {
             lightDirectional = new THREE.SpotLight(0xffffff, 0.35);;
-            lightDirectional.position.set(5, 20, 25);
+            lightDirectional.position.set(20, 20, 25);
             lightDirectional.castShadow = true;
             lightDirectional.shadow.camera.near = 1;
-            lightDirectional.shadow.camera.far = 50;
+            lightDirectional.shadow.camera.far = 100;
             lightDirectional.shadow.camera.left = -30;
             lightDirectional.shadow.camera.right = 30;
             lightDirectional.shadow.camera.top = 30;
@@ -113,11 +173,11 @@
         /* Funcion que crea una esfera con textura de madera y la añade a la escena */
         function addSphere(scene) {
             var geometry = new THREE.SphereGeometry(0.5, 20, 20);
-            var texture = new THREE.TextureLoader().load("texturasBlockout/Marble020_1K_Color.jpg", render);
-            var textureD = new THREE.TextureLoader().load("texturasBlockout/Marble020_1K_Displacement.jpg", render);
-            var textureR = new THREE.TextureLoader().load("texturasBlockout/Marble020_1K_Roughness.jpg", render);
-            var textureN = new THREE.TextureLoader().load("texturasBlockout/Marble020_1K_NormalGL.jpg", render);
-            var textureN2 = new THREE.TextureLoader().load("texturasBlockout/Marble020_1K_NormalDX.jpg", render);
+            var texture = new THREE.TextureLoader().load("texturasBlockout/marble/Marble020_1K_Color.jpg", render);
+            var textureD = new THREE.TextureLoader().load("texturasBlockout/marble/Marble020_1K_Displacement.jpg", render);
+            var textureR = new THREE.TextureLoader().load("texturasBlockout/marble/Marble020_1K_Roughness.jpg", render);
+            var textureN = new THREE.TextureLoader().load("texturasBlockout/marble/Marble020_1K_NormalGL.jpg", render);
+            var textureN2 = new THREE.TextureLoader().load("texturasBlockout/marble/Marble020_1K_NormalDX.jpg", render);
             var material = new THREE.MeshPhysicalMaterial({
                 roughnessMap: textureR,
                 /* displacementMap: textureD, */
@@ -134,11 +194,11 @@
         /* Funcion que crea un plano con textura de madera y la añade a la escena */
         function addFloor(scene, render) {
             var geometry = new THREE.PlaneGeometry(25, 25);
-            var texture = new THREE.TextureLoader().load("texturasBlockout/Wood069_1K_Color.jpg", render);
-            var textureD = new THREE.TextureLoader().load("texturasBlockout/Wood069_1K_Displacement.jpg", render);
-            var textureR = new THREE.TextureLoader().load("texturasBlockout/Wood069_1K_Roughness.jpg", render);
-            var textureN = new THREE.TextureLoader().load("texturasBlockout/Wood069_1K_NormalGL.jpg", render);
-            var textureN2 = new THREE.TextureLoader().load("texturasBlockout/Wood069_1K_NormalDX.jpg", render);
+            var texture = new THREE.TextureLoader().load("texturasBlockout/wood/Wood069_1K_Color.jpg", render);
+            var textureD = new THREE.TextureLoader().load("texturasBlockout/wood/Wood069_1K_Displacement.jpg", render);
+            var textureR = new THREE.TextureLoader().load("texturasBlockout/wood/Wood069_1K_Roughness.jpg", render);
+            var textureN = new THREE.TextureLoader().load("texturasBlockout/wood/Wood069_1K_NormalGL.jpg", render);
+            var textureN2 = new THREE.TextureLoader().load("texturasBlockout/wood/Wood069_1K_NormalDX.jpg", render);
             var material = new THREE.MeshPhysicalMaterial({
                 displacementMap: textureD,
                 normalMap: textureN,
@@ -210,17 +270,15 @@
 
         // Crear una base movil
         var baseGeometry = new THREE.BoxGeometry(5, 1, 2);
-        var texture = new THREE.TextureLoader().load("texturasBlockout/Fabric026_1K_Color.jpg", render);
-        var textureR = new THREE.TextureLoader().load("texturasBlockout/Fabric026_1K_Roughness.jpg", render);
-        var textureN = new THREE.TextureLoader().load("texturasBlockout/Fabric026_1K_NormalGL.jpg", render);
-        var textureN2 = new THREE.TextureLoader().load("texturasBlockout/Marble020_1K_NormalDX.jpg", render);
-        var textureM = new THREE.TextureLoader().load("texturasBlockout/.jpg", render);
+        var texture = new THREE.TextureLoader().load("texturasBlockout/plastic/Plastic008_1K_Color.png", render);
+        var textureR = new THREE.TextureLoader().load("texturasBlockout/plastic/Plastic008_1K_NormalGL.png", render);
+        var textureN = new THREE.TextureLoader().load("texturasBlockout/plastic/Plastic008_1K_NormalGL.png", render);
+        var textureN2 = new THREE.TextureLoader().load("texturasBlockout/plastic/Plastic008_1K_NormalDX.png", render);
          // Creación del material
          var material = new THREE.MeshPhysicalMaterial({
                     map: texture,
                     roughnessMap: textureR,
                     normalMap: textureN,
-                    metalnessMap: textureM,
                     clearcoatNormalMap: textureN2 // Especificar un segundo mapa normal
                 });
         var base = new THREE.Mesh(baseGeometry, material);
@@ -236,7 +294,7 @@
         /* Crear bricks */
         function addBricks(scene, render) {
             const bricks = [];
-            const separacion = 5; // distancia entre objetos
+            const separacion = 5; // distancia 
 
             for (let i = 0; i < 5; i++) {
                 for (let j = 0; j < 4; j++) {
@@ -380,7 +438,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(2);
+                    addPoints(1);
                     borders.splice(4,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -396,7 +454,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(2);
+                    addPoints(1);
                     borders.splice(5,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -412,7 +470,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(1);
+                    addPoints(2);
                     borders.splice(6,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -428,7 +486,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(1);
+                    addPoints(2);
                     borders.splice(7,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -444,7 +502,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(2);
+                    addPoints(1);
                     borders.splice(8,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -460,7 +518,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(2);
+                    addPoints(1);
                     borders.splice(9,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -476,7 +534,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(1);
+                    addPoints(2);
                     borders.splice(10,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -492,7 +550,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(1);
+                    addPoints(2);
                     borders.splice(11,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -508,7 +566,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(2);
+                    addPoints(1);
                     borders.splice(12,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -524,7 +582,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(2);
+                    addPoints(1);
                     borders.splice(13,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -540,7 +598,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(1);
+                    addPoints(2);
                     borders.splice(14,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -556,7 +614,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(1);
+                    addPoints(2);
                     borders.splice(15,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -572,7 +630,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(2);
+                    addPoints(1);
                     borders.splice(16,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -588,7 +646,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(2);
+                    addPoints(1);
                     borders.splice(17,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -604,7 +662,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(1);
+                    addPoints(2);
                     borders.splice(18,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -620,7 +678,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(1);
+                    addPoints(2);
                     borders.splice(19,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -636,7 +694,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(2);
+                    addPoints(1);
                     borders.splice(20,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -652,7 +710,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(2);
+                    addPoints(1);
                     borders.splice(21,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -668,7 +726,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(1);
+                    addPoints(2);
                     borders.splice(22,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -684,7 +742,7 @@
                     count = count + 1;
                     bricks = bricks + 1;
                     console.log(count, bricks)
-                    addPoints(1);
+                    addPoints(2);
                     borders.splice(23,1,change)
                     positionBreak = base.position.x;
                     audio.play();
@@ -757,7 +815,7 @@
             if (event.key === "Enter") {
                 stepX = saveStepX;
                 stepY = saveStepY;
-                document.getElementById("gamestatus").innerHTML = ""
+                document.getElementById("gamestatus").innerHTML = "Press ESC to pause"
             }
         }
 
