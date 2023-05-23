@@ -1,7 +1,6 @@
 
 <html>
 
-
     <head>
         <title>Draw a triangle</title>
     </head>
@@ -39,17 +38,7 @@
         var cuentaR = 0.0;
         var cuentaN = 0.0;
 
-
-        // Inicializar variables generales
-
-
-        var gl;
-        var cuentaTx = 0.0; 
-        var cuentaTy = 0.0;
-
-        var cuentaE = 1.0;
-        var cuentaR = 0.0;
-        var cuentaN = 0.0;
+        
 
         function init() {
 
@@ -81,7 +70,6 @@
             // Clear canvas
             gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-
             document.onkeydown = function (ev) {
                 var step = new Number(document.getElementById("step").value);
 
@@ -130,76 +118,12 @@
         }
 
         function drawScene() {
-
-            gl.clear(gl.COLOR_BUFFER_BIT);
-
-            document.onkeydown = function (ev) {
-                var step = new Number(document.getElementById("step").value);
-
-                console.log(ev.keyCode)
-
-                switch (ev.keyCode) {
-
-                    
-                    case 37: // Left
-                        cuentaTx -= step
-                        break;
-                    case 39: // Right
-                        cuentaTx += step
-                        break;
-                    case 38: // Up
-                        cuentaTy += step
-                        break;
-                    case 40: // Down
-                        cuentaTy -= step
-                        break;
-                    case 33: // PageUp
-                        cuentaE += step
-                        break;
-                    case 34: // PageDown
-                        cuentaE -= step
-                        break;
-                    case 36: // Home
-                        cuentaR -= step
-                        break
-                    case 35: // End
-                        cuentaR += step
-                        break;
-                    case 187: // +
-                        cuentaN += step
-                        break;
-                    case 189: // -
-                        cuentaN -= step
-                        break;
-                }
-                    // ...
-            }
-
-            drawScene();
-
-        }
-
-        function drawScene() {
-
-            // Calculate position
-
-                var Txy = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaTx, cuentaTy, 0.0]);
-                var Sxy = glMatrix.mat4.fromScaling(glMatrix.mat4.create(), [cuentaE, cuentaE, 0.0]);
-                var Rz = glMatrix.mat4.fromZRotation(glMatrix.mat4.create(), cuentaR);
-
-                var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
-                var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
-                var matrix = TSRxyz;
 
             // Clear canvas
             gl.clear(gl.COLOR_BUFFER_BIT);
 
             // Calculate position
 
-
-            var Txy = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [positionX, positionY, 0.0]);
-            var E = glMatrix.mat4.fromScaling(glMatrix.mat4.create(), [scale, scale, 0.0]);
-
                 var Txy = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaTx, cuentaTy, 0.0]);
                 var Sxy = glMatrix.mat4.fromScaling(glMatrix.mat4.create(), [cuentaE, cuentaE, 0.0]);
                 var Rz = glMatrix.mat4.fromZRotation(glMatrix.mat4.create(), cuentaR);
@@ -209,23 +133,15 @@
                 var matrix = TSRxyz;
 
 
-
             // Set uniform value (u_Matrix) in vertex shader
 
             var mvXMatrixUniform = gl.getUniformLocation(gl.program, "u_Matrix");
-
 
                 gl.uniformMatrix4fv(mvXMatrixUniform, false, matrix);
 
             gl.drawArrays(gl.TRIANGLES, 0, 3*2);
 
-
                 var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
-
-                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
-
-                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
-
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
@@ -235,14 +151,7 @@
 
             gl.drawArrays(gl.TRIANGLES, 6, 3);
 
-
                 var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
-
-                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
-
-
-                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
-
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
@@ -253,13 +162,7 @@
             gl.drawArrays(gl.TRIANGLES, 9, 3);
 
                 
-
                 var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
-
-                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
-
-                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
-
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
@@ -269,13 +172,7 @@
 
             gl.drawArrays(gl.TRIANGLES, 12, 3);
 
-
                 var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
-
-                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [-cuentaN, 0.0, 0.0]);
-
-                var Tim = glMatrix.mat4.fromTranslation(glMatrix.mat4.create(), [cuentaN, 0.0, 0.0]);
-
                 var TSxy = glMatrix.mat4.multiply(glMatrix.mat4.create(), Txy, Sxy);
                 var TSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSxy, Rz);
                 var TTSRxyz = glMatrix.mat4.multiply(glMatrix.mat4.create(), TSRxyz, Tim);
@@ -285,21 +182,11 @@
 
             gl.drawArrays(gl.TRIANGLES, 15, 3);
 
-
             requestAnimationFrame(drawScene);
 
-
-
-            gl.uniformMatrix4fv(mvXMatrixUniform, false, Txy);
-            gl.drawArrays(gl.TRIANGLES, 0, 3*6);
-
-
-            requestAnimationFrame(drawScene);
-            
         }
     
         function initVertexBuffers(gl) {
-
             // Vertices
             var dim = 3;
             var vertices = new Float32Array([
@@ -321,7 +208,6 @@
                 0, 0.46, 0, // 4a capa
                 -0.19, 0.25, 0,
                 0.19, 0.25, 0,
-
             ]);
     
             // Create a buffer object
@@ -380,7 +266,6 @@
             }
             return shader;
         }
-
     </script>
     
     </html>
