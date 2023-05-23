@@ -7,6 +7,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js"></script>
 
+    <!-- Al seleccionar la luz de navidad, a veces sale la luz bien superpuesta y a veces sale el arbol mas oscuro, recargando la pagina se puede comprobar -->
+
     <script id="shaderVs" type="x-shader/x-vertex">
         attribute vec4 a_Position;
 	    attribute vec2 a_TexCoord;
@@ -33,7 +35,7 @@
             if (Light_Value == 0.0){
                 gl_FragColor = color0;
             } else {
-                gl_FragColor = color1 * color0;
+                gl_FragColor = (color1) * (color0);
             };
         }
     </script>
@@ -156,7 +158,7 @@
             if (document.getElementById('rot').checked == true) {
                 count = count
             } else {
-                count = count - 0.01*speed.value
+                count = count - 0.01 * speed.value
             };
             
             count = count + 0.01 * speed.value;
