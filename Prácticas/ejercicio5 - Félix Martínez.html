@@ -103,9 +103,10 @@
 
             if (document.getElementById('triangles').checked == true){
                 gl.drawElements(gl.TRIANGLES, 30 * 3, gl.UNSIGNED_SHORT, 0);
-
+                gl.drawArrays(gl.TRIANGLES, 90, 90);
             } else {
                 gl.drawElements(gl.LINES, 30 * 3, gl.UNSIGNED_SHORT, 0);
+                gl.drawArrays(gl.TRIANGLES, 90, 90);
             }
 
             // Control de count con speed

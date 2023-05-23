@@ -9,11 +9,12 @@
 
     <script id="shaderVs" type="x-shader/x-vertex">
         attribute vec4 a_Position;
-        attribute vec2 a_TexCoord;
+	    attribute vec2 a_TexCoord;
+        varying vec2 v_TexCoord;
         uniform mat4 u_pMatrix;
         uniform mat4 u_vMatrix;
         uniform mat4 u_mvMatrix;
-        varying vec2 v_TexCoord;
+        varying highp vec4 v_Color;
         void main() {
             gl_Position = u_pMatrix * u_vMatrix * u_mvMatrix * a_Position;
             v_TexCoord = a_TexCoord;
@@ -25,10 +26,15 @@
         uniform sampler2D u_Sampler0;
         uniform sampler2D u_Sampler1;
         varying vec2 v_TexCoord;
+        uniform float Light_Value;
         void main(void) {
             vec4 color0 = texture2D(u_Sampler0, v_TexCoord);
             vec4 color1 = texture2D(u_Sampler1, v_TexCoord);
-            gl_FragColor = color0 * color1;
+            if (Light_Value == 0.0){
+                gl_FragColor = color0;
+            } else {
+                gl_FragColor = color1 * color0;
+            };
         }
     </script>
 
@@ -38,7 +44,10 @@
         var count = 0.0;
         var z = 3.5;
         var y = 0;
+        var LightValue;
+        var cameraY = 0;
         var projectionValue;
+        
 
         function init() {
             
@@ -67,6 +76,22 @@
 
             // Hidden surface removal
             gl.enable(gl.DEPTH_TEST);
+
+            document.onkeydown = function (ev) {
+            var stepUD = new Number(document.getElementById("stepUD").value);
+                if (document.querySelector('input[name="projection"]:checked').value == "perspective") {
+                    switch (ev.keyCode) {
+                        case 40: // Down
+                        cameraY -= stepUD;
+                        break;
+                        case 38: // Up
+                        cameraY += stepUD;
+                        break;
+                    }
+                };
+            }
+
+            drawScene();
              
             // Event listener for mouse wheel
             document.addEventListener('wheel', function (event) {
@@ -74,13 +99,13 @@
                 z = event.wheelDelta > 0 ? z - 1 : z + 1;}
             });
 
-            drawScene();
         }
 
         function drawScene() {
 
             projectionValue = document.querySelector('input[name="projection"]:checked').value;
             var speed = document.getElementById("speed");
+            var LightValue = document.querySelector('input[name="lights"]:checked').value;
 
             gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -98,7 +123,7 @@
             var ratio = canvas.width / canvas.height;
             
             if (projectionValue == "perspective"){
-                var vMatrix = glMatrix.mat4.lookAt(glMatrix.mat4.create(), [0, y, z], [0, 0, 0], [0, 1, 0]);
+                var vMatrix = glMatrix.mat4.lookAt(glMatrix.mat4.create(), [0, cameraY, z], [0, 0, 0], [0, 1, 0]);
                 var pMatrix = glMatrix.mat4.perspective(glMatrix.mat4.create(), toRadian(60), ratio, 0.1, 100);
             } else {
                 var vMatrix = glMatrix.mat4.lookAt(glMatrix.mat4.create(), [0, 0, 0], [0, 0, 0], [0, 0, 0]);
@@ -111,11 +136,20 @@
             // Draw
 
             if (document.getElementById('triangles').checked == true) {
-                gl.drawElements(gl.TRIANGLES, 30 * 3, gl.UNSIGNED_SHORT, 0);
+                gl.drawElements(gl.TRIANGLES, 15 * 2 * 3, gl.UNSIGNED_SHORT, 0);
+                // Cuando represente triangulos: cargar textura de arbol o arbol con luces
+                var LightsUniform = gl.getUniformLocation(gl.program, "Light_Value");
+                if (LightValue == "0.0"){
+                    gl.uniform1f(LightsUniform, 0.0);
+                } else {
+                    gl.uniform1f(LightsUniform, 1.0);
+                }
 
             } else {
-                gl.drawElements(gl.LINES, 30 * 3, gl.UNSIGNED_SHORT, 0);
+                gl.drawElements(gl.LINES, 15 * 2 * 3, gl.UNSIGNED_SHORT, 0);
             }
+
+
 
             // Control de count con speed
 
@@ -134,7 +168,7 @@
             // Vertexes and colors  (X, Y, Z, x, y)
             var vertexesAndColors = [
 
-            // Cubo
+                // Cubo
                 -0.3, -0.6, -0.3,   0.5, 0.0,
                 0.3, -0.6, -0.3,    1.0, 0.0,
                 0.3, 0.1, -0.3,     0.5, 0.5,
@@ -243,7 +277,8 @@
 
             // Indexes (for drawing squares using triangles)
             var indexes = [
-            0, 1, 2,
+
+                0, 1, 2,
                 0, 2, 3,
 
                 4, 5, 6,
@@ -269,7 +304,6 @@
 
                 32, 33, 34,
                 32, 34, 35,
-
                 36, 37, 38,
 
                 39, 40, 41,
@@ -301,11 +335,11 @@
 
             var vertexPositionAttribute = gl.getAttribLocation(gl.program, "a_Position");
             gl.enableVertexAttribArray(vertexPositionAttribute);
-            gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 4 * (2 + 2), 0);
+            gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 4 * (3 + 2), 0);
 
             var vertexColorAttribute = gl.getAttribLocation(gl.program, "a_TexCoord");
             gl.enableVertexAttribArray(vertexColorAttribute);
-            gl.vertexAttribPointer(vertexColorAttribute, 2, gl.FLOAT, false, 4 * (2 + 2), 4 * 2);
+            gl.vertexAttribPointer(vertexColorAttribute, 2, gl.FLOAT, false, 4 * (3 + 2), 4 * 3);
 
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
             gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexes), gl.STATIC_DRAW);
@@ -313,16 +347,15 @@
 
         function initTexturesAndDraw(gl) {
 
-            var image0 = new Image();
-            image0.src = 'light.jpg';
             var image1 = new Image();
-            image1.src = 'tree.jpg';
+            image1.src = 'light.jpg';
+            var image0 = new Image();
+            image0.src = 'tree.jpg';
 
             image0.onload = function () {
                 loadTexture(gl, "u_Sampler0", image0, 0, true);
                 image1.onload = function () {
                     loadTexture(gl, "u_Sampler1", image1, 1, true);
-                    drawScene(gl);
                 };
             };
 
@@ -398,12 +431,17 @@
     <b>Rotation</b>
     <input type="checkbox" name="rotation" id="rot" checked>
     <input type="range" id="speed" min="1" max="3" value="1" step="1"> Speed<br>
+    <b>Lights</b>
+    <input type="radio" name="lights" value="1.0"> Yes
+    <input type="radio" name="lights" value="0.0" checked> No<br>
     <b>WebGL primitive</b>
     <input type="radio" id="triangles" name="primitive" value="triangles" checked> Triangles
     <input type="radio" name="primitive" value="lines"> Lines<br>
     <b>Projection type</b>
     <input type="radio" ide="proj" name="projection" value="perspective" checked> Perspective
     <input type="radio" name="projection" value="orthographic"> Orthographic<br>
+    <p>Step Up/Down:</p> <span><input type="text" value="0.01" id="stepUD"><br></span>
+
 </body>
 
 </html>
