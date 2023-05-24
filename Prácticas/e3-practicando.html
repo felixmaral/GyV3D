@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-
-<html>
-
-<head>
-    <title>Ejercicio 3 - Félix Martínez Alonso</title>
-</head>
-
 <body onload="init()">
-    <canvas id="myCanvas" width="900" height="900"></canvas>
+    <canvas id="myCanvas" width="600" height="600"></canvas>
+    <br>
+    <b>Red</b>
+    <input type="range" min="0" max="1" step="0.01" id="red"><span id="redvalue"></span>
+    <b>Green</b>
+    <input type="range" min="0" max="1" step="0.01" id="green"><span id="greenvalue"></span>
+    <b>Blue</b>
+    <input type="range" min="0" max="1" step="0.01" id="blue"><span id="bluevalue"></span>
 </body>
 
 <script id="shaderVs" type="x-shader/x-vertex">
@@ -26,6 +25,24 @@
 </script>
 
 <script>
+
+    var red;
+    var green;
+    var blue;
+
+    const rgbRange = {
+        redrange: document.getElementById("red"),
+        greenrange: document.getElementById("green"),
+        bluerange: document.getElementById("blue"),
+
+        redvalue: document.getElementById("redvalue"),
+        greenvalue: document.getElementById("greenvalue"),
+        bluevalue: document.getElementById("bluevalue"),
+    }
+
+    rgbRange.redvalue.innerHTML = (rgbRange.redrange.value);
+    rgbRange.greenvalue.innerHTML = (rgbRange.greenrange.value);
+    rgbRange.bluevalue.innerHTML = (rgbRange.bluerange.value);
 
     function init() {
 
@@ -83,21 +100,21 @@
         var xyz = [x, y, 0];
         vertices.push(xyz);
 
-
         gl.clear(gl.COLOR_BUFFER_BIT);
         var a_PositionTriangle = gl.getAttribLocation(gl.program, 'a_PositionTriangle');
 
-        console.log(vertices.length)
-
         // Bucle
 
-        for (i=0; (i < (vertices.length - (vertices.length %3))); i+=3) { 
+        for (i=0; (i < (vertices.length - (vertices.length % 4))); i+=4) { 
         
             var dim = 3;
             var pos = new Float32Array([
                 vertices[i][0], vertices[i][1], 0, // Vertice #1
                 vertices[i+1][0], vertices[i+1][1], 0, // Vertice #2
-                vertices[i+2][0], vertices[i+2][1], 0 // Vertice #3
+                vertices[i+2][0], vertices[i+2][1], 0, // Vertice #3
+                vertices[i][0], vertices[i][1], 0, // Vertice #2
+                vertices[i+2][0], vertices[i+2][1], 0, // Vertice #3
+                vertices[i+3][0], vertices[i+3][1], 0 // Vertice #4
             ]);
 
             // V_Buffer
@@ -108,30 +125,27 @@
             gl.enableVertexAttribArray(a_PositionTriangle);
 
             // Coordenadas del centroide
-            centroide_x = (vertices[i][0] + vertices[i+1][0] + vertices[i+2][0])/3
-            centroide_y = (vertices[i][1] + vertices[i+1][1] + vertices[i+2][1])/3
+            centroide_x = (vertices[i][0] + vertices[i+1][0] + vertices[i+2][0] + vertices[i+3][0])/4
+            centroide_y = (vertices[i][1] + vertices[i+1][1] + vertices[i+2][1] + vertices[i+3][1])/4
             centroide = [centroide_x, centroide_y] // Mostrar cuadrantes para comprobar
-            console.log(centroide)
 
             var u_ColorTriangle = gl.getUniformLocation(gl.program, 'u_ColorTriangle');
 
             // RGB según cuadrante
 
-            if (centroide_x < 0 && centroide_y < 0.0) {
-                colors = ([1.0, 0.0, 0.0, 1.0])
-            } else if (centroide_x >= 0 && centroide_y < 0) {
-                colors = ([0.0, 1.0, 0.0, 1.0])
-            } else if (centroide_x < 0 && centroide_y >= 0) {
-                colors = ([0.0, 0.0, 1.0, 1.0])
-            } else {
-                colors = ([1.0, 1.0, 0.0, 1.0])
-            }
+            red = rgbRange.redrange.value;
+            green = rgbRange.greenrange.value;
+            blue = rgbRange.bluerange.value;
+
+            console.log(red, green, blue);
+
+            colors = ([red, green, blue, 1.0])
 
             // Funcion de color
             gl.uniform4fv(u_ColorTriangle, colors);
 
             
-            gl.drawArrays(gl.TRIANGLES, 0, 3); // Dibujar triangulos
+            gl.drawArrays(gl.TRIANGLES, 0, 6); // Dibujar triangulos
             
         }
 
