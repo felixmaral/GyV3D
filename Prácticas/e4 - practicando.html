@@ -8,7 +8,13 @@
     <body onload="init()">
         <canvas id="myCanvas" width="800" height="800"></canvas>
         <br>
-        Step: <input type="number" value="0.01" step="0.01" id="step">
+        Step: <input type="number"  value="0.01" step="0.01" id="step">
+        <b>Skin</b>
+        <input type="radio" name="skin" value="0.0" id="0" checked>
+        <label for="0">0</label>
+        <input type="radio" name="skin" value="1.0" id="1" >
+        <input type="radio" name="skin" value="2.0" id="2" >
+        
     </body>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js"></script>
@@ -22,8 +28,18 @@
     </script>
     
     <script id="shaderFs" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform float skin_value;
         void main() {
-            gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+
+            if (skin_value == 0.0) {
+                gl_FragColor = vec4(1.0, .0, 0.0, 1.0);
+            } else if (skin_value == 1.0) {
+                gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+            } else if (skin_value == 2.0) {
+                gl_FragColor = vec4(.0, 1.0, 1.0, 1.0);
+            }
+
         }
     </script>
     
@@ -37,9 +53,7 @@
         var cuentaE = 1.0;
         var cuentaR = 0.0;
         var cuentaN = 0.0;
-
-        
-
+    
         function init() {
 
             // Get canvas object from the DOM
@@ -112,7 +126,6 @@
                     // ...
             }
 
-
             drawScene();
 
         }
@@ -121,6 +134,20 @@
 
             // Clear canvas
             gl.clear(gl.COLOR_BUFFER_BIT);
+
+            var skin_value = document.querySelector('input[name="skin"]:checked').value
+
+            console.log(skin_value);
+
+            var skinUniform = gl.getUniformLocation(gl.program, "skin_value");
+
+            if (skin_value == "0.0") {
+                    gl.uniform1f(skinUniform, 0.0);
+                } else if (skin_value == "1.0") {
+                    gl.uniform1f(skinUniform, 1.0);
+                } else {
+                    gl.uniform1f(skinUniform, 2.0);
+                }
 
             // Calculate position
 
