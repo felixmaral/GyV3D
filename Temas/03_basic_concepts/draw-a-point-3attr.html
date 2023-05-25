@@ -49,11 +49,16 @@
             return;
         }
 
+        canvas.onmousedown = function(ev) {
+            click(ev, gl, canvas);};
+
+            console.log(verticesArray);
+
 		
 		var a_Position = gl.getAttribLocation(gl.program, "a_Position");
 		
 		// 1. Array values
-		var verticesArray = [0.0, 0.0, 0.0];
+		var verticesArray = [0.5, 0.5, 0.0];
 		gl.vertexAttrib3fv(a_Position, verticesArray);
 		
 		// 2. Single values
@@ -62,6 +67,31 @@
 		// Draw
 		gl.drawArrays(gl.POINTS, 0, 1);
 		
+    }
+
+    function click(ev, gl, canvas) {
+
+    // Coordinates of canvas origin
+    var rect = ev.target.getBoundingClientRect();
+
+    // relative x coordinate of click in canvas
+    var clickX = ev.clientX - rect.left;
+
+    // relative y coordinate of click in canvas
+    var clickY = ev.clientY - rect.top;
+
+    // WebGL coordinates (3D)
+    var halfCanvasWidth = canvas.width / 2;
+    var halfCanvasHeight = canvas.height / 2;
+    var x = (clickX - halfCanvasWidth) / halfCanvasWidth;
+    var y = (halfCanvasHeight - clickY) / halfCanvasHeight;
+    var xyz = [x, y, 0];
+    centroide.push(xyz);
+
+    console.log(x, y);
+
+    verticesArray.push(centroide)     
+
     }
 
 
